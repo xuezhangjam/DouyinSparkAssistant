@@ -511,8 +511,13 @@ class DouyinApp(Adw.ApplicationWindow):
             self.append_log("🚀 正在拉起 FastAPI Web 管理端...")
             self.web_process = subprocess.Popen([os.path.join(os.getcwd(), ".venv", "bin", "python"), "web_server.py"])
             atexit.register(self.web_process.terminate)
-            # Give it a second to start
-            GLib.timeout_add_seconds(1, lambda: webbrowser.open("http://localhost:8000"))
+            
+            def open_browser():
+                webbrowser.open("http://localhost:8000")
+                return False  # 返回 False 确保只执行一次
+                
+            # 等待 1 秒后启动浏览器
+            GLib.timeout_add_seconds(1, open_browser)
         else:
             self.append_log("🌐 Web 管理端已在运行中，正在为您打开浏览器...")
             webbrowser.open("http://localhost:8000")
