@@ -324,6 +324,7 @@ class DouyinApp(Adw.ApplicationWindow):
         
         # --- 右侧布局 ---
         right_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        right_box.set_size_request(450, -1)
         right_header = Adw.HeaderBar()
         right_header.set_show_title(False)
         
