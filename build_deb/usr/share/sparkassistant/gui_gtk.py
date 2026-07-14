@@ -307,7 +307,7 @@ class DouyinApp(Adw.ApplicationWindow):
         self.listbox.set_margin_start(12)
         self.listbox.set_margin_end(12)
         
-        scroll = Gtk.ScrolledWindow(vexpand=True)
+        scroll = Gtk.ScrolledWindow(vexpand=True, hexpand=True)
         scroll.set_child(self.listbox)
         left_box.append(scroll)
         
@@ -396,7 +396,7 @@ class DouyinApp(Adw.ApplicationWindow):
         self.textview.get_style_context().add_provider(css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
         
         self.textbuffer = self.textview.get_buffer()
-        log_scroll = Gtk.ScrolledWindow(vexpand=True)
+        log_scroll = Gtk.ScrolledWindow(vexpand=True, hexpand=True)
         log_scroll.set_child(self.textview)
         right_box.append(log_scroll)
         
