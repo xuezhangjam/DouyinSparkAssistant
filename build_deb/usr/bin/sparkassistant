@@ -33,6 +33,11 @@ if [ ! -d "$VENV_DIR" ]; then
     echo "========================================="
 else
     source "$VENV_DIR/bin/activate"
+    # 检查是否有新增依赖（用于旧版本升级时的自动修复）
+    if ! python3 -c "import pystray, fastapi, uvicorn" 2>/dev/null; then
+        echo "检测到新版本依赖，正在为您自动升级..."
+        pip install -r "$APP_DIR/requirements.txt"
+    fi
 fi
 
 # 切换到应用程序目录以保证相对路径读取正确
