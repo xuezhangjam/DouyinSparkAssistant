@@ -602,7 +602,22 @@ class DouyinApp(Adw.ApplicationWindow):
             except:
                 pass
         GLib.idle_add(_notify)
-
+        
+    def on_sponsor(self, btn):
+        dialog = Adw.MessageDialog(
+            transient_for=self,
+            heading="☕ 请作者喝杯奶茶",
+            body="如果这个项目帮助你节省了大量的人工运营时间，欢迎支持！你的赞赏是我初三毕业暑假持续更新维护的最大动力！"
+        )
+        dialog.add_response("close", "关闭")
+        dialog.set_default_response("close")
+        dialog.set_close_response("close")
+        
+        pic = Gtk.Picture.new_for_filename(os.path.join(os.path.dirname(os.path.abspath(__file__)), "donate.png"))
+        pic.set_size_request(300, 300)
+        dialog.set_extra_child(pic)
+        
+        dialog.present()
 class MyApp(Adw.Application):
     def __init__(self):
         super().__init__(application_id="com.douyin.commercial")
