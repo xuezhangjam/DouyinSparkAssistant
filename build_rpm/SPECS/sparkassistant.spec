@@ -1,7 +1,7 @@
 %define debug_package %{nil}
 
 Name:           sparkassistant
-Version:        1.0.1
+Version:        1.0.2
 Release:        1%{?dist}
 Summary:        基于 GTK4 的抖音商业全自动防风控群发与代续系统
 License:        MIT

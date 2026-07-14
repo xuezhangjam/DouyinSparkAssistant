@@ -41,6 +41,14 @@ async def main(client_id):
             args=['--disable-blink-features=AutomationControlled']
         )
         
+        # 拦截所有的非 HTTP(S) 协议（例如 douyin://），防止弹出 "要打开 Dummy Protocol Handler 吗"
+        async def intercept_protocol(route):
+            if not route.request.url.startswith(('http://', 'https://', 'data:', 'blob:', 'ws://', 'wss://')):
+                await route.abort()
+            else:
+                await route.fallback()
+        await context.route("**/*", intercept_protocol)
+        
         page = context.pages[0]
         
         async def safe_click(x, y):
