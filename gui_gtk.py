@@ -679,11 +679,12 @@ class AboutDialog(Adw.Window):
         btn_ver.set_halign(Gtk.Align.CENTER)
         top_box.append(btn_ver)
         
-        page = Adw.PreferencesPage()
-        content.append(page)
-        
-        group_links = Adw.PreferencesGroup()
-        page.add(group_links)
+        list_box = Gtk.ListBox()
+        list_box.set_selection_mode(Gtk.SelectionMode.NONE)
+        list_box.add_css_class("boxed-list")
+        list_box.set_margin_start(32)
+        list_box.set_margin_end(32)
+        content.append(list_box)
         
         def add_link(title, url):
             row = Adw.ActionRow(title=title)
@@ -691,7 +692,7 @@ class AboutDialog(Adw.Window):
             row.add_suffix(icon_img)
             row.set_activatable(True)
             row.connect("activated", lambda *_: webbrowser.open(url))
-            group_links.add(row)
+            list_box.append(row)
             
         add_link("项目首页 (W)", "https://github.com/xuezhangjam/DouyinSparkAssistant")
         add_link("获取更新 (U)", "https://github.com/xuezhangjam/DouyinSparkAssistant/releases")
