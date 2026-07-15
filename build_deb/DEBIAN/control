@@ -1,5 +1,5 @@
 Package: sparkassistant
-Version: 1.2.3
+Version: 1.2.4
 Architecture: amd64
 Maintainer: Zhaozikai110812 <zhaozikai110812@users.noreply.github.com>
 Depends: python3, python3-venv, python3-gi, python3-gi-cairo, gir1.2-gtk-4.0, gir1.2-adw-1, libappindicator3-1

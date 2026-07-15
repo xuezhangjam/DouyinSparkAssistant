@@ -336,9 +336,9 @@ class DouyinApp(Adw.ApplicationWindow):
         btn_settings.connect("clicked", self.on_settings)
         right_header.pack_end(btn_settings)
         
-        btn_sponsor = Gtk.Button(icon_name="starred-symbolic")
+        btn_sponsor = Gtk.Button(icon_name="help-about-symbolic")
         btn_sponsor.add_css_class("flat")
-        btn_sponsor.set_tooltip_text("支持与赞赏")
+        btn_sponsor.set_tooltip_text("关于火花助手")
         btn_sponsor.connect("clicked", self.on_sponsor)
         right_header.pack_end(btn_sponsor)
         
@@ -503,7 +503,7 @@ class DouyinApp(Adw.ApplicationWindow):
 
     # --- 按钮事件 ---
     def on_settings(self, btn):
-        dialog = SettingsDialog(transient_for=self)
+        dialog = SettingsDialog(self)
         dialog.present()
         
     def on_web_ui(self, btn):
@@ -634,20 +634,83 @@ class DouyinApp(Adw.ApplicationWindow):
         GLib.idle_add(_notify)
         
     def on_sponsor(self, btn):
-        dialog = Adw.MessageDialog(
-            transient_for=self,
-            heading="☕ 请作者喝杯奶茶",
-            body="如果这个项目帮助你节省了大量的人工运营时间，欢迎支持！你的赞赏是我初三毕业暑假持续更新维护的最大动力！"
-        )
-        dialog.add_response("close", "关闭")
-        dialog.set_default_response("close")
-        dialog.set_close_response("close")
+        dialog = AboutDialog(self)
+        dialog.present()
+        
+class AboutDialog(Adw.Window):
+    def __init__(self, parent):
+        super().__init__(title="关于", transient_for=parent, modal=True)
+        self.set_default_size(420, 650)
+        
+        main_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        
+        header = Gtk.HeaderBar()
+        main_box.append(header)
+        
+        scroll = Gtk.ScrolledWindow()
+        scroll.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+        scroll.set_vexpand(True)
+        main_box.append(scroll)
+        
+        content = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        scroll.set_child(content)
+        
+        top_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16)
+        top_box.set_margin_top(48)
+        top_box.set_margin_bottom(32)
+        top_box.set_halign(Gtk.Align.CENTER)
+        content.append(top_box)
+        
+        icon = Gtk.Image.new_from_icon_name("application-x-executable")
+        icon.set_pixel_size(128)
+        top_box.append(icon)
+        
+        lbl_title = Gtk.Label(label="<b>火花助手</b>", use_markup=True)
+        lbl_title.add_css_class("title-1")
+        top_box.append(lbl_title)
+        
+        lbl_sub = Gtk.Label(label="Zhaozikai110812 倾力打造")
+        lbl_sub.add_css_class("dim-label")
+        top_box.append(lbl_sub)
+        
+        btn_ver = Gtk.Button(label="1.2.3")
+        btn_ver.add_css_class("pill")
+        btn_ver.set_sensitive(False)
+        btn_ver.set_halign(Gtk.Align.CENTER)
+        top_box.append(btn_ver)
+        
+        page = Adw.PreferencesPage()
+        content.append(page)
+        
+        group_links = Adw.PreferencesGroup()
+        page.add(group_links)
+        
+        def add_link(title, url):
+            row = Adw.ActionRow(title=title)
+            icon_img = Gtk.Image(icon_name="external-link-symbolic")
+            row.add_suffix(icon_img)
+            row.set_activatable(True)
+            row.connect("activated", lambda *_: webbrowser.open(url))
+            group_links.add(row)
+            
+        add_link("项目首页 (W)", "https://github.com/xuezhangjam/DouyinSparkAssistant")
+        add_link("获取更新 (U)", "https://github.com/xuezhangjam/DouyinSparkAssistant/releases")
+        add_link("报告问题 (R)", "https://github.com/xuezhangjam/DouyinSparkAssistant/issues")
+        
+        donate_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=16)
+        donate_box.set_halign(Gtk.Align.CENTER)
+        donate_box.set_margin_top(24)
+        donate_box.set_margin_bottom(32)
+        content.append(donate_box)
+        
+        lbl_donate = Gtk.Label(label="<b>☕ 支持作者</b>", use_markup=True)
+        donate_box.append(lbl_donate)
         
         pic = Gtk.Picture.new_for_filename(os.path.join(os.path.dirname(os.path.abspath(__file__)), "donate.png"))
-        pic.set_size_request(300, 300)
-        dialog.set_extra_child(pic)
+        pic.set_size_request(250, 250)
+        donate_box.append(pic)
         
-        dialog.present()
+        self.set_content(main_box)
 class MyApp(Adw.Application):
     def __init__(self):
         super().__init__(application_id="com.douyin.commercial")
