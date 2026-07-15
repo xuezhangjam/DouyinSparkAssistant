@@ -2,7 +2,7 @@
 set -e
 # 一键打包脚本：生成 .deb 和 .rpm 包
 
-VERSION="1.2.6"
+VERSION="1.2.7"
 APP_NAME="sparkassistant"
 MAINTAINER="Zhaozikai110812 <zhaozikai110812@users.noreply.github.com>"
 DESCRIPTION="基于 GTK4 的抖音商业全自动防风控群发与代续系统"
@@ -34,7 +34,7 @@ Package: $APP_NAME
 Version: $VERSION
 Architecture: amd64
 Maintainer: $MAINTAINER
-Depends: python3, python3-venv, python3-gi, python3-gi-cairo, gir1.2-gtk-4.0, gir1.2-adw-1, libappindicator3-1
+Depends: python3, python3-venv, python3-gi, python3-gi-cairo, gir1.2-gtk-4.0, gir1.2-adw-1, libappindicator3-1, gir1.2-ayatanaappindicator3-0.1 | gir1.2-appindicator3-0.1
 Description: $DESCRIPTION
 EOF
 
@@ -61,7 +61,7 @@ Release:        1%{?dist}
 Summary:        $DESCRIPTION
 License:        MIT
 Source0:        %{name}-%{version}.tar.gz
-Requires:       python3, python3-gobject, gtk4, libadwaita
+Requires:       python3, python3-gobject, gtk4, libadwaita, libappindicator-gtk3
 BuildArch:      noarch
 
 %description

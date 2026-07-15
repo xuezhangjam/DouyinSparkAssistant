@@ -1,0 +1,36 @@
+.nh
+.TH "GH-AUTH-STATUS" "1" "Jul 2024" "GitHub CLI 2.53.0" "GitHub CLI manual"
+
+.SH NAME
+.PP
+gh-auth-status - Display active account and authentication state on each known GitHub host
+
+
+.SH SYNOPSIS
+.PP
+\fBgh auth status [flags]\fR
+
+
+.SH DESCRIPTION
+.PP
+Display active account and authentication state on each known GitHub host.
+
+.PP
+For each host, the authentication state of each known account is tested and any issues are included in
+the output. Each host section will indicate the active account, which will be used when targeting that host.
+To change the active account for a host, see \fBgh auth switch\fR\&.
+
+
+.SH OPTIONS
+.TP
+\fB-h\fR, \fB--hostname\fR \fB<string>\fR
+Check a specific hostname's auth status
+
+.TP
+\fB-t\fR, \fB--show-token\fR
+Display the auth token
+
+
+.SH SEE ALSO
+.PP
+\fBgh-auth(1)\fR

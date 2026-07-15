@@ -1,0 +1,60 @@
+.nh
+.TH "GH-ATTESTATION-TRUSTED-ROOT" "1" "Jul 2024" "GitHub CLI 2.53.0" "GitHub CLI manual"
+
+.SH NAME
+.PP
+gh-attestation-trusted-root - Output trusted_root.jsonl contents, likely for offline verification
+
+
+.SH SYNOPSIS
+.PP
+\fBgh attestation trusted-root [--tuf-url <url> --tuf-root <file-path>] [--verify-only] [flags]\fR
+
+
+.SH DESCRIPTION
+.SS NOTE: This feature is currently in beta, and subject to change.
+.EX
+     Output contents for a trusted_root.jsonl file, likely for offline verification.
+
+     When using `gh attestation verify`, if your machine is on the internet,
+     this will happen automatically. But to do offline verification, you need to
+     supply a trusted root file with `--custom-trusted-root`; this command
+     will help you fetch a `trusted_root.jsonl` file for that purpose.
+
+     You can call this command without any flags to get a trusted root file covering
+     the Sigstore Public Good Instance as well as GitHub's Sigstore instance.
+
+     Otherwise you can use `--tuf-url` to specify the URL of a custom TUF
+     repository mirror, and `--tuf-root` should be the path to the
+     `root.json` file that you securely obtained out-of-band.
+
+     If you just want to verify the integrity of your local TUF repository, and don't
+     want the contents of a trusted_root.jsonl file, use `--verify-only`.
+.EE
+
+
+.SH OPTIONS
+.TP
+\fB--tuf-root\fR \fB<string>\fR
+Path to the TUF root.json file on disk
+
+.TP
+\fB--tuf-url\fR \fB<string>\fR
+URL to the TUF repository mirror
+
+.TP
+\fB--verify-only\fR
+Don't output trusted_root.jsonl contents
+
+
+.SH EXAMPLE
+.EX
+# Get a trusted_root.jsonl for both Sigstore Public Good and GitHub's instance
+gh attestation trusted-root
+
+.EE
+
+
+.SH SEE ALSO
+.PP
+\fBgh-attestation(1)\fR

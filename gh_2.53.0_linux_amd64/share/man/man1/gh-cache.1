@@ -1,0 +1,45 @@
+.nh
+.TH "GH-CACHE" "1" "Jul 2024" "GitHub CLI 2.53.0" "GitHub CLI manual"
+
+.SH NAME
+.PP
+gh-cache - Manage GitHub Actions caches
+
+
+.SH SYNOPSIS
+.PP
+\fBgh cache <command> [flags]\fR
+
+
+.SH DESCRIPTION
+.PP
+Work with GitHub Actions caches.
+
+
+.SH AVAILABLE COMMANDS
+.TP
+\fBgh-cache-delete(1)\fR
+Delete GitHub Actions caches
+
+.TP
+\fBgh-cache-list(1)\fR
+List GitHub Actions caches
+
+
+.SH OPTIONS
+.TP
+\fB-R\fR, \fB--repo\fR \fB<[HOST/]OWNER/REPO>\fR
+Select another repository using the [HOST/]OWNER/REPO format
+
+
+.SH EXAMPLE
+.EX
+$ gh cache list
+$ gh cache delete --all
+
+.EE
+
+
+.SH SEE ALSO
+.PP
+\fBgh(1)\fR

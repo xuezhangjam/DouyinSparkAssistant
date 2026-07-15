@@ -1,0 +1,50 @@
+.nh
+.TH "GH-PR-UPDATE-BRANCH" "1" "Jul 2024" "GitHub CLI 2.53.0" "GitHub CLI manual"
+
+.SH NAME
+.PP
+gh-pr-update-branch - Update a pull request branch
+
+
+.SH SYNOPSIS
+.PP
+\fBgh pr update-branch [<number> | <url> | <branch>] [flags]\fR
+
+
+.SH DESCRIPTION
+.PP
+Update a pull request branch with latest changes of the base branch.
+
+.PP
+Without an argument, the pull request that belongs to the current branch is selected.
+
+.PP
+The default behavior is to update with a merge commit (i.e., merging the base branch
+into the the PR's branch). To reconcile the changes with rebasing on top of the base
+branch, the \fB--rebase\fR option should be provided.
+
+
+.SH OPTIONS
+.TP
+\fB--rebase\fR
+Update PR branch by rebasing on top of latest base branch
+
+
+.SH OPTIONS INHERITED FROM PARENT COMMANDS
+.TP
+\fB-R\fR, \fB--repo\fR \fB<[HOST/]OWNER/REPO>\fR
+Select another repository using the [HOST/]OWNER/REPO format
+
+
+.SH EXAMPLE
+.EX
+$ gh pr update-branch 23
+$ gh pr update-branch 23 --rebase
+$ gh pr update-branch 23 --repo owner/repo
+
+.EE
+
+
+.SH SEE ALSO
+.PP
+\fBgh-pr(1)\fR
