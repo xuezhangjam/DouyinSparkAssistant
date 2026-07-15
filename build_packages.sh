@@ -2,7 +2,7 @@
 set -e
 # 一键打包脚本：生成 .deb 和 .rpm 包
 
-VERSION="1.2.8"
+VERSION="1.2.9"
 APP_NAME="sparkassistant"
 MAINTAINER="Zhaozikai110812 <zhaozikai110812@users.noreply.github.com>"
 DESCRIPTION="基于 GTK4 的抖音商业全自动防风控群发与代续系统"

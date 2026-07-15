@@ -44,4 +44,4 @@ fi
 cd "$USER_DATA_DIR" || exit 1
 
 # 启动主程序
-python3 "$APP_DIR/tray_runner.py"
+python3 "$APP_DIR/gui_gtk.py"
