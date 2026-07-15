@@ -40,8 +40,8 @@ else
     fi
 fi
 
-# 切换到应用程序目录以保证相对路径读取正确
-cd "$APP_DIR" || exit 1
+# 切换到用户数据目录以保证读写权限
+cd "$USER_DATA_DIR" || exit 1
 
 # 启动主程序
-python3 tray_runner.py
+python3 "$APP_DIR/tray_runner.py"

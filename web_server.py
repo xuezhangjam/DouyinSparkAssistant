@@ -2,6 +2,7 @@ import os
 import json
 import asyncio
 import subprocess
+import sys
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -46,11 +47,12 @@ async def run_client(request: Request):
     env = os.environ.copy()
     env["DOUYIN_HEADLESS"] = "true"
     
+    base_dir = os.path.dirname(os.path.abspath(__file__))
     if cid:
-        subprocess.Popen([os.path.join(os.getcwd(), ".venv", "bin", "python"), "runner.py", cid], env=env)
+        subprocess.Popen([sys.executable, os.path.join(base_dir, "runner.py"), cid], env=env)
         return {"status": "started", "cid": cid}
     else:
-        subprocess.Popen([os.path.join(os.getcwd(), ".venv", "bin", "python"), "scheduler.py"], env=env)
+        subprocess.Popen([sys.executable, os.path.join(base_dir, "scheduler.py")], env=env)
         return {"status": "started_all"}
 
 @app.get("/api/logs")
