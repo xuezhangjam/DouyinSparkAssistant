@@ -510,7 +510,9 @@ class DouyinApp(Adw.ApplicationWindow):
         if getattr(self, "web_process", None) is None or self.web_process.poll() is not None:
             self.append_log("🚀 正在拉起 FastAPI Web 管理端...")
             base_dir = os.path.dirname(os.path.abspath(__file__))
-            self.web_process = subprocess.Popen([sys.executable, os.path.join(base_dir, "web_server.py")])
+            venv_python = os.path.join(base_dir, ".venv", "bin", "python")
+            python_exe = venv_python if os.path.exists(venv_python) else sys.executable
+            self.web_process = subprocess.Popen([python_exe, os.path.join(base_dir, "web_server.py")])
             atexit.register(self.web_process.terminate)
             
             def open_browser():
@@ -595,7 +597,9 @@ class DouyinApp(Adw.ApplicationWindow):
             
         self.textbuffer.set_text("") # 清空日志
         base_dir = os.path.dirname(os.path.abspath(__file__))
-        cmd = [sys.executable, os.path.join(base_dir, script_name)] + args
+        venv_python = os.path.join(base_dir, ".venv", "bin", "python")
+        python_exe = venv_python if os.path.exists(venv_python) else sys.executable
+        cmd = [python_exe, os.path.join(base_dir, script_name)] + args
         self.append_log(f"🚀 开始执行: {' '.join(cmd)}\n" + "="*50)
         
         env = os.environ.copy()

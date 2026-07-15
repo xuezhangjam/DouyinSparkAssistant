@@ -93,7 +93,7 @@ const showMsg = (text: string, color: string = 'success') => {
 
 const headers = [
   { title: '客户编号', key: 'id', align: 'start' as const },
-  { title: '备注名称', key: 'name' },
+  { title: '备注名称', key: 'alias' },
   { title: '火花数量', key: 'friends_count' },
   { title: '操作', key: 'actions', align: 'center' as const, sortable: false },
 ]
@@ -113,8 +113,11 @@ const fetchClients = async () => {
 const submitAddClient = async () => {
   if (!newClientId.value) return
   const current: any = {}
-  clients.value.forEach(c => { current[c.id] = { name: c.name, friends_count: c.friends_count } })
-  current[newClientId.value] = { name: "新客户", friends_count: 5 }
+  clients.value.forEach(c => { 
+    const { id, ...rest } = c;
+    current[c.id] = rest;
+  })
+  current[newClientId.value] = { alias: "新客户", friends_count: 5, user_data_dir: `user_data_${newClientId.value}` }
   
   try {
     await axios.post('/api/clients', current)
@@ -136,7 +139,10 @@ const deleteClient = async () => {
   if (!itemToDelete.value) return
   const current: any = {}
   clients.value.forEach(c => { 
-    if (c.id !== itemToDelete.value.id) current[c.id] = { name: c.name, friends_count: c.friends_count }
+    if (c.id !== itemToDelete.value.id) {
+      const { id, ...rest } = c;
+      current[c.id] = rest;
+    }
   })
   try {
     await axios.post('/api/clients', current)

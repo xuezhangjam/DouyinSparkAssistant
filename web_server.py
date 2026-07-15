@@ -48,11 +48,13 @@ async def run_client(request: Request):
     env["DOUYIN_HEADLESS"] = "true"
     
     base_dir = os.path.dirname(os.path.abspath(__file__))
+    venv_python = os.path.join(base_dir, ".venv", "bin", "python")
+    python_exe = venv_python if os.path.exists(venv_python) else sys.executable
     if cid:
-        subprocess.Popen([sys.executable, os.path.join(base_dir, "runner.py"), cid], env=env)
+        subprocess.Popen([python_exe, os.path.join(base_dir, "runner.py"), cid], env=env)
         return {"status": "started", "cid": cid}
     else:
-        subprocess.Popen([sys.executable, os.path.join(base_dir, "scheduler.py")], env=env)
+        subprocess.Popen([python_exe, os.path.join(base_dir, "scheduler.py")], env=env)
         return {"status": "started_all"}
 
 @app.get("/api/logs")
