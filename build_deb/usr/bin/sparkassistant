@@ -31,21 +31,26 @@ if [ ! -d "$VENV_DIR" ]; then
         (
             echo "10"; echo "# 创建虚拟环境..."
             python3 -m venv "$VENV_DIR" --system-site-packages
-            echo "30"; echo "# 正在安装基础依赖..."
+            echo "30"; echo "# 正在安装基础依赖 (使用国内镜像加速)..."
             source "$VENV_DIR/bin/activate"
+            pip config set global.index-url https://mirrors.aliyun.com/pypi/simple/
             pip install -r "$APP_DIR/requirements.txt"
             echo "60"; echo "# 正在下载自动化浏览器内核 (文件较大，请耐心等待)..."
+            export PLAYWRIGHT_DOWNLOAD_HOST=https://npmmirror.com/mirrors/playwright/
             playwright install chromium
             echo "100"; echo "# 初始化完成！"
         ) | zenity --progress --title="火花助手首次配置" --text="准备初始化..." --percentage=0 --auto-close --auto-kill
     else
         python3 -m venv "$VENV_DIR" --system-site-packages
         source "$VENV_DIR/bin/activate"
+        pip config set global.index-url https://mirrors.aliyun.com/pypi/simple/
         pip install -r "$APP_DIR/requirements.txt"
+        export PLAYWRIGHT_DOWNLOAD_HOST=https://npmmirror.com/mirrors/playwright/
         playwright install chromium
     fi
 else
     source "$VENV_DIR/bin/activate"
+    pip config set global.index-url https://mirrors.aliyun.com/pypi/simple/
     # 检查是否有新增依赖（用于旧版本升级时的自动修复）
     if ! python3 -c "import pystray, fastapi, uvicorn" 2>/dev/null; then
         echo "检测到新版本依赖，正在为您自动升级..."
