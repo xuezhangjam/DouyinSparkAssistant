@@ -7,12 +7,11 @@ import os
 import random
 import subprocess
 
-zenity_process = None
+progress_process = None
 
 def init_progress():
-    global zenity_process
+    global progress_process
     
-    # 在 Cron 定时任务等无头环境下，自动探测当前用户的活跃桌面显示器并注入环境变量
     if "DISPLAY" not in os.environ and "WAYLAND_DISPLAY" not in os.environ:
         try:
             output = subprocess.check_output(["w", "-h"], text=True)
@@ -30,30 +29,37 @@ def init_progress():
         os.environ["XAUTHORITY"] = os.path.expanduser("~/.Xauthority")
         
     try:
-        zenity_process = subprocess.Popen(
-            ["zenity", "--progress", "--title=火花助手运行中", "--text=正在初始化...", "--percentage=0", "--auto-close", "--width=350", "--no-cancel"],
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        progress_process = subprocess.Popen(
+            [sys.executable, os.path.join(base_dir, "progress_ui.py")],
             stdin=subprocess.PIPE, text=True, stderr=subprocess.DEVNULL
         )
     except Exception:
-        zenity_process = None
+        progress_process = None
 
 def update_progress(percent, text):
-    global zenity_process
-    if zenity_process and zenity_process.poll() is None:
+    global progress_process
+    if progress_process:
+        if progress_process.poll() is not None:
+            # 用户点击了 X 取消
+            if progress_process.returncode != 0:
+                print("用户主动取消了任务。")
+                os._exit(1)
+            return
         try:
-            zenity_process.stdin.write(f"{percent}\n")
-            zenity_process.stdin.write(f"# {text}\n")
-            zenity_process.stdin.flush()
+            progress_process.stdin.write(f"{percent}\n")
+            progress_process.stdin.write(f"# {text}\n")
+            progress_process.stdin.flush()
         except:
             pass
 
 def close_progress():
-    global zenity_process
-    if zenity_process and zenity_process.poll() is None:
+    global progress_process
+    if progress_process and progress_process.poll() is None:
         try:
-            zenity_process.stdin.write("100\n")
-            zenity_process.stdin.write("# 任务完成\n")
-            zenity_process.stdin.flush()
+            progress_process.stdin.write("100\n")
+            progress_process.stdin.write("# 任务完成\n")
+            progress_process.stdin.flush()
         except:
             pass
 

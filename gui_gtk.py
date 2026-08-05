@@ -344,6 +344,13 @@ class DouyinApp(Adw.ApplicationWindow):
         right_box.set_size_request(450, -1)
         right_header = Adw.HeaderBar()
         
+        btn_exit = Gtk.Button(icon_name="application-exit-symbolic")
+        btn_exit.add_css_class("flat")
+        btn_exit.add_css_class("error")
+        btn_exit.set_tooltip_text("完全退出系统")
+        btn_exit.connect("clicked", self.on_exit_app)
+        right_header.pack_end(btn_exit)
+        
         btn_settings = Gtk.Button(icon_name="emblem-system-symbolic")
         btn_settings.add_css_class("flat")
         btn_settings.set_tooltip_text("自动化设置")
@@ -521,6 +528,34 @@ class DouyinApp(Adw.ApplicationWindow):
         GLib.idle_add(_append)
 
     # --- 按钮事件 ---
+    def on_exit_app(self, btn):
+        dialog = Adw.MessageDialog(
+            heading="确认完全退出？",
+            body="您确定要彻底退出火花助手吗？\n所有正在后台运行的代挂任务和浏览器均会被强制终止！",
+            transient_for=self
+        )
+        dialog.add_response("cancel", "取消")
+        dialog.add_response("quit", "退出")
+        dialog.set_response_appearance("quit", Adw.ResponseAppearance.DESTRUCTIVE)
+        
+        def on_response(dlg, response):
+            if response == "quit":
+                self.append_log("🛑 正在强制清理所有进程并退出...")
+                import psutil
+                for proc in psutil.process_iter(['pid', 'name', 'cmdline']):
+                    try:
+                        cmdline = proc.info.get('cmdline')
+                        if cmdline:
+                            cmd_str = ' '.join(cmdline)
+                            if 'gui_gtk.py' in cmd_str or 'scheduler.py' in cmd_str or 'runner.py' in cmd_str:
+                                proc.kill()
+                    except:
+                        pass
+                os._exit(0)
+                
+        dialog.connect("response", on_response)
+        dialog.present()
+
     def on_settings(self, btn):
         dialog = SettingsDialog(self)
         dialog.present()
