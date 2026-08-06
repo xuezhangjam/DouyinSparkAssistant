@@ -4,7 +4,7 @@ import subprocess
 import time
 
 CONFIG_FILE = "clients.json"
-RUNNER_SCRIPT = "runner.py"
+RUNNER_SCRIPT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "runner.py")
 
 def main():
     print("=== 火花助手 批量调度系统 ===")
@@ -23,16 +23,21 @@ def main():
         
     print(f"共发现 {len(active_clients)} 个活跃客户，准备开始串行处理...")
     
-    for client_id in active_clients:
+    total = len(active_clients)
+    for idx, client_id in enumerate(active_clients):
         client = config[client_id]
         print("\n" + "="*50)
-        print(f"⏰ 开始处理客户: {client.get('alias', client_id)} (ID: {client_id})")
+        print(f"⏰ 开始处理客户: {client.get('alias', client_id)} (ID: {client_id}) [{idx+1}/{total}]")
         print("="*50)
         
         # 使用 subprocess 调用 runner.py
         try:
             import sys
-            subprocess.run([sys.executable, RUNNER_SCRIPT, client_id], check=True)
+            env = os.environ.copy()
+            env["BATCH_INDEX"] = str(idx+1)
+            env["BATCH_TOTAL"] = str(total)
+            env["CLIENT_ALIAS"] = client.get('alias', client_id)
+            subprocess.run([sys.executable, RUNNER_SCRIPT, client_id], env=env, check=True)
             print(f"✅ 客户 {client_id} 处理完成！")
         except subprocess.CalledProcessError as e:
             if e.returncode == 2:

@@ -1,7 +1,7 @@
 %define debug_package %{nil}
 
 Name:           sparkassistant
-Version:        1.3.2
+Version:        1.3.11
 Release:        1%{?dist}
 Summary:        基于 GTK4 的抖音商业全自动防风控群发与代续系统
 License:        MIT
@@ -23,6 +23,7 @@ cp -r usr $RPM_BUILD_ROOT/
 %files
 /usr/share/sparkassistant/*
 /usr/share/applications/sparkassistant.desktop
+/usr/share/applications/bitbrowser-dummy.desktop
 /usr/bin/sparkassistant
 
 %changelog

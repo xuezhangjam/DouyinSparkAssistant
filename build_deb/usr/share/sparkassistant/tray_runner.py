@@ -1,3 +1,21 @@
+import gi
+_original_require_version = gi.require_version
+
+def _mock_require_version(namespace, version):
+    if namespace == 'AppIndicator3':
+        try:
+            _original_require_version('AppIndicator3', version)
+            return
+        except ValueError:
+            _original_require_version('AyatanaAppIndicator3', version)
+            import sys
+            from gi.repository import AyatanaAppIndicator3
+            sys.modules['gi.repository.AppIndicator3'] = AyatanaAppIndicator3
+            return
+    _original_require_version(namespace, version)
+
+gi.require_version = _mock_require_version
+
 import pystray
 from PIL import Image, ImageDraw
 import subprocess

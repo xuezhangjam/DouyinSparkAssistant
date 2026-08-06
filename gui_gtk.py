@@ -525,6 +525,18 @@ class DouyinApp(Adw.ApplicationWindow):
             # 自动滚动
             mark = self.textbuffer.create_mark(None, self.textbuffer.get_end_iter(), False)
             self.textview.scroll_to_mark(mark, 0.0, True, 0.0, 1.0)
+            
+            # 同时将日志写入文件，供 Web 端同步读取
+            try:
+                with open("douyin_playwright.log", "a", encoding="utf-8") as f:
+                    # 剥离一些纯 UI 的特殊不可见字符，如果有的话，但通常没有。
+                    # 为了美观，可以加个简单的时间戳
+                    import datetime
+                    ts = datetime.datetime.now().strftime("%H:%M:%S")
+                    f.write(f"[{ts}] {text}\n")
+            except Exception as e:
+                pass
+                
         GLib.idle_add(_append)
 
     # --- 按钮事件 ---
@@ -624,6 +636,8 @@ class DouyinApp(Adw.ApplicationWindow):
             self.append_log("⚠️ 请先在左侧选择一个客户！")
             return
         self.append_log(f"准备单独运行客户: {self.selected_cid}")
+        os.environ["BATCH_INDEX"] = "1"
+        os.environ["BATCH_TOTAL"] = "1"
         self.run_script(RUNNER_SCRIPT, [self.selected_cid], not self.chk_browser.get_active())
 
     def on_run_all(self, btn):
@@ -744,7 +758,7 @@ class AboutDialog(Adw.Window):
         lbl_sub.add_css_class("dim-label")
         top_box.append(lbl_sub)
         
-        btn_ver = Gtk.Button(label="1.3.5")
+        btn_ver = Gtk.Button(label="1.3.11")
         btn_ver.add_css_class("pill")
         btn_ver.set_sensitive(False)
         btn_ver.set_halign(Gtk.Align.CENTER)

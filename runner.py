@@ -30,15 +30,40 @@ def init_progress():
         
     try:
         base_dir = os.path.dirname(os.path.abspath(__file__))
+        
+        client_id = sys.argv[1] if len(sys.argv) > 1 else "unknown"
+        client_name = os.environ.get("CLIENT_ALIAS", "")
+        if not client_name:
+            try:
+                import json
+                with open(os.path.join(base_dir, "clients.json"), "r", encoding="utf-8") as f:
+                    config_data = json.load(f)
+                    client_name = config_data.get(client_id, {}).get("alias", "")
+            except Exception:
+                pass
+        if not client_name:
+            client_name = client_id
+            
+        batch_idx = os.environ.get("BATCH_INDEX", "")
+        batch_tot = os.environ.get("BATCH_TOTAL", "")
+        batch_str = f" ({batch_idx}/{batch_tot})" if batch_idx and batch_tot else ""
+        
+        env = os.environ.copy()
+        env["CURRENT_CLIENT_NAME"] = f"当前操作客户: {client_name}{batch_str}"
+        env["BATCH_PROGRESS_STR"] = ""
+        
         progress_process = subprocess.Popen(
             [sys.executable, os.path.join(base_dir, "progress_ui.py")],
-            stdin=subprocess.PIPE, text=True, stderr=subprocess.DEVNULL
+            stdin=subprocess.PIPE, text=True, stderr=subprocess.DEVNULL, env=env
         )
     except Exception:
         progress_process = None
 
+sent_count = 0
+total_friends = 0
+
 def update_progress(percent, text):
-    global progress_process
+    global progress_process, sent_count, total_friends
     if progress_process:
         if progress_process.poll() is not None:
             # 用户点击了 X 取消
@@ -48,7 +73,10 @@ def update_progress(percent, text):
             return
         try:
             progress_process.stdin.write(f"{percent}\n")
-            progress_process.stdin.write(f"# {text}\n")
+            if total_friends > 0:
+                progress_process.stdin.write(f"# [已发 {sent_count}/{total_friends}] {text}\n")
+            else:
+                progress_process.stdin.write(f"# {text}\n")
             progress_process.stdin.flush()
         except:
             pass
@@ -200,8 +228,10 @@ async def main(client_id):
         # ---------------------------------------------------------
         # 2. 依次按名字定位并续火花 (优化：就近原则扫描)
         # ---------------------------------------------------------
+        global total_friends, sent_count
         pending_friends = set(friends)
         total_friends = len(friends)
+        sent_count = 0
         
         # 先把左侧列表滚回到最顶部
         await page.mouse.move(150, 400)
@@ -395,6 +425,7 @@ async def main(client_id):
                     print("❌ 未能找到笑脸图标")
                     
                 pending_friends.remove(friend_name)
+                sent_count += 1
                 await asyncio.sleep(2)
                 continue
                 

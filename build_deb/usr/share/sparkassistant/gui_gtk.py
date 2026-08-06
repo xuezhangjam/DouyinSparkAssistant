@@ -150,14 +150,20 @@ class SettingsDialog(Adw.Window):
         page.add(group)
         
         # 开机自启
-        self.row_autostart = Adw.SwitchRow(title="开机后台自启", subtitle="电脑开机时自动静默挂机，不弹界面")
-        self.row_autostart.set_active(self.check_autostart())
+        self.row_autostart = Adw.ActionRow(title="开机后台自启", subtitle="电脑开机时自动静默挂机，不弹界面")
+        self.switch_autostart = Gtk.Switch(valign=Gtk.Align.CENTER)
+        self.switch_autostart.set_active(self.check_autostart())
+        self.row_autostart.add_suffix(self.switch_autostart)
+        self.row_autostart.set_activatable_widget(self.switch_autostart)
         group.add(self.row_autostart)
         
         # 定时执行
         cron_status, cron_time = self.check_cron()
-        self.row_cron = Adw.SwitchRow(title="定时全自动流水线", subtitle="每天定时触发【批量全自动】任务")
-        self.row_cron.set_active(cron_status)
+        self.row_cron = Adw.ActionRow(title="定时全自动流水线", subtitle="每天定时触发【批量全自动】任务")
+        self.switch_cron = Gtk.Switch(valign=Gtk.Align.CENTER)
+        self.switch_cron.set_active(cron_status)
+        self.row_cron.add_suffix(self.switch_cron)
+        self.row_cron.set_activatable_widget(self.switch_cron)
         group.add(self.row_cron)
         
         # 炫酷时间选择器
@@ -203,7 +209,7 @@ class SettingsDialog(Adw.Window):
         self.time_row.add_suffix(time_box)
         
         # 当开关变化时，显示/隐藏时间拨轮
-        self.row_cron.connect("notify::active", lambda *args: self.time_row.set_visible(self.row_cron.get_active()))
+        self.switch_cron.connect("notify::active", lambda *args: self.time_row.set_visible(self.switch_cron.get_active()))
         group.add(self.time_row)
         
         box.append(page)
@@ -234,9 +240,14 @@ class SettingsDialog(Adw.Window):
         
         
         proj_dir = os.path.dirname(os.path.abspath(__file__))
-        if self.row_autostart.get_active():
+        if self.switch_autostart.get_active():
             os.makedirs(autostart_dir, exist_ok=True)
-            runner_cmd = f"bash -c 'cd {proj_dir} && source .venv/bin/activate && DOUYIN_HEADLESS=true python scheduler.py'"
+            
+            user_data_dir = os.path.expanduser("~/.local/share/SparkAssistant")
+            global_venv = os.path.join(user_data_dir, "venv", "bin", "python")
+            python_exe = global_venv if os.path.exists(global_venv) else sys.executable
+            
+            runner_cmd = f"bash -c 'cd {user_data_dir} && DOUYIN_HEADLESS=true {python_exe} {proj_dir}/scheduler.py'"
             desktop_content = f"[Desktop Entry]\nType=Application\nName=Spark Assistant\nExec={runner_cmd}\nHidden=false\nNoDisplay=false\nX-GNOME-Autostart-enabled=true\n"
             with open(autostart_path, 'w') as f:
                 f.write(desktop_content)
@@ -258,9 +269,13 @@ class SettingsDialog(Adw.Window):
             
         new_lines = [line for line in old_crontab.split('\n') if "scheduler.py" not in line and line.strip()]
         
-        if self.row_cron.get_active():
+        if self.switch_cron.get_active():
             proj_dir = os.path.dirname(os.path.abspath(__file__))
-            cron_cmd = f"{int(minute)} {int(hour)} * * * cd {proj_dir} && source .venv/bin/activate && DOUYIN_HEADLESS=true {proj_dir}/.venv/bin/python scheduler.py > /tmp/douyin_cron.log 2>&1"
+            user_data_dir = os.path.expanduser("~/.local/share/SparkAssistant")
+            global_venv = os.path.join(user_data_dir, "venv", "bin", "python")
+            python_exe = global_venv if os.path.exists(global_venv) else sys.executable
+            
+            cron_cmd = f"{int(minute)} {int(hour)} * * * cd {user_data_dir} && DOUYIN_HEADLESS=true {python_exe} {proj_dir}/scheduler.py >> {user_data_dir}/cron.log 2>&1"
             new_lines.append(cron_cmd)
             self.parent_win.append_log(f"✅ 定时全自动任务已设定为每天 {time_str} 执行！")
         else:
@@ -329,6 +344,13 @@ class DouyinApp(Adw.ApplicationWindow):
         right_box.set_size_request(450, -1)
         right_header = Adw.HeaderBar()
         
+        btn_exit = Gtk.Button(icon_name="application-exit-symbolic")
+        btn_exit.add_css_class("flat")
+        btn_exit.add_css_class("error")
+        btn_exit.set_tooltip_text("完全退出系统")
+        btn_exit.connect("clicked", self.on_exit_app)
+        right_header.pack_end(btn_exit)
+        
         btn_settings = Gtk.Button(icon_name="emblem-system-symbolic")
         btn_settings.add_css_class("flat")
         btn_settings.set_tooltip_text("自动化设置")
@@ -385,6 +407,11 @@ class DouyinApp(Adw.ApplicationWindow):
         btn_clear.add_css_class("pill")
         btn_clear.connect("clicked", self.on_clear_log)
         control_box.append(btn_clear)
+        
+        btn_cron_log = Gtk.Button(label="📄 定时日志")
+        btn_cron_log.add_css_class("pill")
+        btn_cron_log.connect("clicked", self.on_view_cron_log)
+        control_box.append(btn_cron_log)
         
         self.chk_browser = Gtk.CheckButton(label="显示浏览器(测试)")
         self.chk_browser.set_active(True)
@@ -498,9 +525,49 @@ class DouyinApp(Adw.ApplicationWindow):
             # 自动滚动
             mark = self.textbuffer.create_mark(None, self.textbuffer.get_end_iter(), False)
             self.textview.scroll_to_mark(mark, 0.0, True, 0.0, 1.0)
+            
+            # 同时将日志写入文件，供 Web 端同步读取
+            try:
+                with open("douyin_playwright.log", "a", encoding="utf-8") as f:
+                    # 剥离一些纯 UI 的特殊不可见字符，如果有的话，但通常没有。
+                    # 为了美观，可以加个简单的时间戳
+                    import datetime
+                    ts = datetime.datetime.now().strftime("%H:%M:%S")
+                    f.write(f"[{ts}] {text}\n")
+            except Exception as e:
+                pass
+                
         GLib.idle_add(_append)
 
     # --- 按钮事件 ---
+    def on_exit_app(self, btn):
+        dialog = Adw.MessageDialog(
+            heading="确认完全退出？",
+            body="您确定要彻底退出火花助手吗？\n所有正在后台运行的代挂任务和浏览器均会被强制终止！",
+            transient_for=self
+        )
+        dialog.add_response("cancel", "取消")
+        dialog.add_response("quit", "退出")
+        dialog.set_response_appearance("quit", Adw.ResponseAppearance.DESTRUCTIVE)
+        
+        def on_response(dlg, response):
+            if response == "quit":
+                self.append_log("🛑 正在强制清理所有进程并退出...")
+                import psutil
+                for proc in psutil.process_iter(['pid', 'name', 'cmdline']):
+                    try:
+                        cmdline = proc.info.get('cmdline')
+                        if cmdline:
+                            cmd_str = ' '.join(cmdline)
+                            if 'gui_gtk.py' in cmd_str or 'scheduler.py' in cmd_str or 'runner.py' in cmd_str:
+                                proc.kill()
+                    except:
+                        pass
+                os._exit(0)
+                
+        dialog.connect("response", on_response)
+        dialog.present()
+
     def on_settings(self, btn):
         dialog = SettingsDialog(self)
         dialog.present()
@@ -569,6 +636,8 @@ class DouyinApp(Adw.ApplicationWindow):
             self.append_log("⚠️ 请先在左侧选择一个客户！")
             return
         self.append_log(f"准备单独运行客户: {self.selected_cid}")
+        os.environ["BATCH_INDEX"] = "1"
+        os.environ["BATCH_TOTAL"] = "1"
         self.run_script(RUNNER_SCRIPT, [self.selected_cid], not self.chk_browser.get_active())
 
     def on_run_all(self, btn):
@@ -589,6 +658,21 @@ class DouyinApp(Adw.ApplicationWindow):
 
     def on_clear_log(self, btn):
         self.textbuffer.set_text("")
+
+    def on_view_cron_log(self, btn):
+        log_path = os.path.expanduser("~/.local/share/SparkAssistant/cron.log")
+        self.textbuffer.set_text("")
+        self.append_log("="*50 + "\n")
+        self.append_log("📄 定时任务执行日志\n")
+        self.append_log("="*50 + "\n")
+        if os.path.exists(log_path):
+            with open(log_path, "r", encoding="utf-8") as f:
+                lines = f.readlines()
+                for line in lines[-100:]:
+                    self.append_log(line)
+            self.append_log("\n" + "="*50 + "\n✅ 以上是最近 100 行定时日志。\n")
+        else:
+            self.append_log("ℹ️ 目前没有任何定时任务日志。等下一次定时任务触发后，这里会显示执行记录。\n")
 
     def run_script(self, script_name, args, headless=True):
         if self.process and self.process.poll() is None:
@@ -674,7 +758,7 @@ class AboutDialog(Adw.Window):
         lbl_sub.add_css_class("dim-label")
         top_box.append(lbl_sub)
         
-        btn_ver = Gtk.Button(label="1.2.3")
+        btn_ver = Gtk.Button(label="1.3.11")
         btn_ver.add_css_class("pill")
         btn_ver.set_sensitive(False)
         btn_ver.set_halign(Gtk.Align.CENTER)

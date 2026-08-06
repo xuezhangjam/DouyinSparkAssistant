@@ -37,6 +37,13 @@ class ProgressWindow(Gtk.Window):
             border-radius: 8px;
         }
         label { color: #fff; }
+        button {
+            padding: 10px;
+            border-radius: 6px;
+        }
+        button:hover {
+            background-color: #444444;
+        }
         """
         provider = Gtk.CssProvider()
         provider.load_from_data(css)
@@ -56,9 +63,12 @@ class ProgressWindow(Gtk.Window):
         left_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
         main_box.pack_start(left_box, True, True, 0)
         
-        self.lbl_title = Gtk.Label(label="正在准备任务...")
-        self.lbl_title.set_xalign(0.0)
-        left_box.pack_start(self.lbl_title, False, False, 0)
+        self.current_text = "请稍候..."
+        self.batch_str = os.environ.get("BATCH_PROGRESS_STR", "")
+        
+        self.lbl_client = Gtk.Label(label=os.environ.get("CURRENT_CLIENT_NAME", "任务进度"))
+        self.lbl_client.set_xalign(0.0)
+        left_box.pack_start(self.lbl_client, False, False, 0)
         
         self.progress = Gtk.ProgressBar()
         self.progress.set_fraction(0.0)
@@ -71,11 +81,12 @@ class ProgressWindow(Gtk.Window):
         
         btn_cancel = Gtk.Button()
         # 内部放一个红色的 X
-        lbl_x = Gtk.Label(label="<span color='#ff5555' weight='bold'>✖</span>")
+        lbl_x = Gtk.Label(label="<span color='#ff5555' weight='bold' size='large'>✖</span>")
         lbl_x.set_use_markup(True)
         btn_cancel.add(lbl_x)
         btn_cancel.set_relief(Gtk.ReliefStyle.NONE)
         btn_cancel.set_valign(Gtk.Align.CENTER)
+        btn_cancel.set_size_request(44, 44)
         btn_cancel.connect("clicked", self.on_cancel)
         main_box.pack_end(btn_cancel, False, False, 0)
         
@@ -96,8 +107,10 @@ class ProgressWindow(Gtk.Window):
         if percent is not None:
             self.progress.set_fraction(percent / 100.0)
         if text is not None:
-            self.lbl_title.set_text(text)
-            self.lbl_sub.set_markup(f"<small>已完成 {int(percent or self.progress.get_fraction()*100)}%</small>")
+            self.current_text = text
+            
+        current_percent = int(self.progress.get_fraction() * 100)
+        self.lbl_sub.set_markup(f"<small>{current_percent}%{self.batch_str} - {self.current_text}</small>")
 
     def read_stdin(self):
         for line in iter(sys.stdin.readline, ''):

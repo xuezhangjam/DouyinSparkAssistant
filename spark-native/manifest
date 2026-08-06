@@ -1,0 +1,10 @@
+appname               = spark-native
+version               = 1.0.0
+display_name          = display-name
+desc                  = app-description
+platform              = x86
+source                = thirdparty
+maintainer            = your-name
+distributor           = your-name
+desktop_uidir         = ui
+desktop_applaunchname = spark-native.Application

@@ -1,0 +1,13 @@
+{
+    ".url": {
+        "sparkassistant.Application": {
+            "title": "{display_name}",
+            "icon": "images/icon_{0}.png",
+            "type": "url",
+            "protocol": "http",
+            "port": "{port}",
+            "url": "/",
+            "allUsers": true
+        }
+    }
+}

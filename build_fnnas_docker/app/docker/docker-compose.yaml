@@ -1,0 +1,11 @@
+services:
+  web:
+    image: mcr.microsoft.com/playwright/python:v1.44.0-jammy
+    container_name: sparkassistant-web
+    restart: unless-stopped
+    ports:
+      - "${TRIM_SERVICE_PORT}:8000"
+    volumes:
+      - "${TRIM_APPDEST}/app/src:/app"
+      - "${TRIM_PKGVAR}:/var/log/sparkassistant"
+    command: bash /app/docker-entrypoint.sh

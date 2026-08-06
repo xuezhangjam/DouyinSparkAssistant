@@ -5,6 +5,91 @@ import sys
 import json
 import os
 import random
+import subprocess
+
+progress_process = None
+
+def init_progress():
+    global progress_process
+    
+    if "DISPLAY" not in os.environ and "WAYLAND_DISPLAY" not in os.environ:
+        try:
+            output = subprocess.check_output(["w", "-h"], text=True)
+            for line in output.split('\n'):
+                parts = line.split()
+                if len(parts) > 2 and parts[1].startswith(':'):
+                    os.environ["DISPLAY"] = parts[1]
+                    break
+        except Exception:
+            pass
+        if "DISPLAY" not in os.environ:
+            os.environ["DISPLAY"] = ":0"
+            
+    if "XAUTHORITY" not in os.environ:
+        os.environ["XAUTHORITY"] = os.path.expanduser("~/.Xauthority")
+        
+    try:
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        
+        client_id = sys.argv[1] if len(sys.argv) > 1 else "unknown"
+        client_name = os.environ.get("CLIENT_ALIAS", "")
+        if not client_name:
+            try:
+                import json
+                with open(os.path.join(base_dir, "clients.json"), "r", encoding="utf-8") as f:
+                    config_data = json.load(f)
+                    client_name = config_data.get(client_id, {}).get("alias", "")
+            except Exception:
+                pass
+        if not client_name:
+            client_name = client_id
+            
+        batch_idx = os.environ.get("BATCH_INDEX", "")
+        batch_tot = os.environ.get("BATCH_TOTAL", "")
+        batch_str = f" ({batch_idx}/{batch_tot})" if batch_idx and batch_tot else ""
+        
+        env = os.environ.copy()
+        env["CURRENT_CLIENT_NAME"] = f"当前操作客户: {client_name}{batch_str}"
+        env["BATCH_PROGRESS_STR"] = ""
+        
+        progress_process = subprocess.Popen(
+            [sys.executable, os.path.join(base_dir, "progress_ui.py")],
+            stdin=subprocess.PIPE, text=True, stderr=subprocess.DEVNULL, env=env
+        )
+    except Exception:
+        progress_process = None
+
+sent_count = 0
+total_friends = 0
+
+def update_progress(percent, text):
+    global progress_process, sent_count, total_friends
+    if progress_process:
+        if progress_process.poll() is not None:
+            # 用户点击了 X 取消
+            if progress_process.returncode != 0:
+                print("用户主动取消了任务。")
+                os._exit(1)
+            return
+        try:
+            progress_process.stdin.write(f"{percent}\n")
+            if total_friends > 0:
+                progress_process.stdin.write(f"# [已发 {sent_count}/{total_friends}] {text}\n")
+            else:
+                progress_process.stdin.write(f"# {text}\n")
+            progress_process.stdin.flush()
+        except:
+            pass
+
+def close_progress():
+    global progress_process
+    if progress_process and progress_process.poll() is None:
+        try:
+            progress_process.stdin.write("100\n")
+            progress_process.stdin.write("# 任务完成\n")
+            progress_process.stdin.flush()
+        except:
+            pass
 
 CONFIG_FILE = "clients.json"
 
@@ -28,6 +113,9 @@ async def main(client_id):
     if not friends:
         print(f"客户 {client_id} 没有配置任何需要续火花的好友，退出。")
         return
+        
+    init_progress()
+    update_progress(5, "启动浏览器环境...")
 
     async with async_playwright() as p:
         # 根据环境变量决定是否使用无头模式
@@ -106,9 +194,11 @@ async def main(client_id):
         await page.route("**/*", lambda route: route.continue_())
 
         print("正在打开 https://www.douyin.com/chat?isPopup=1 ...")
+        update_progress(10, "正在打开网页版聊天...")
         await page.goto("https://www.douyin.com/chat?isPopup=1")
         
         print("等待页面加载（前 5 秒）...")
+        update_progress(15, "等待页面加载...")
         await asyncio.sleep(5)
         
         # 安全风控检测：检查是否出现了登录/验证码弹窗
@@ -126,191 +216,229 @@ async def main(client_id):
             print("3. 在弹出的浏览器中手动完成登录或短信验证")
             print("4. 登录成功后直接关闭浏览器即可恢复！")
             print("======================================")
+            update_progress(100, "遭遇安全风控拦截，请手动处理！")
             await asyncio.sleep(2)
+            close_progress()
             return 2
 
         print(f"✅ 成功锁定这 {len(friends)} 位好友，准备按名字逐一追踪并续火花：")
         print(" | ".join(friends))
+        update_progress(20, f"锁定 {len(friends)} 位好友，开始扫描...")
 
         # ---------------------------------------------------------
-        # 2. 依次按名字定位并续火花
+        # 2. 依次按名字定位并续火花 (优化：就近原则扫描)
         # ---------------------------------------------------------
-        for friend_name in friends:
-            print(f"\\n======================================")
-            print(f"▶️ 正在追踪好友: {friend_name}")
-            
-            # 每次寻找新朋友前，先把左侧列表滚回到最顶部，防止漏掉上面的人
-            await page.mouse.move(150, 400)
-            await page.mouse.wheel(0, -10000)
-            await asyncio.sleep(1)
-            
-            # 定位并点击该好友 (带滚动重试)
-            found_box = None
-            for attempt in range(8):
-                found_box = await page.evaluate(f'''() => {{
-                    const els = Array.from(document.querySelectorAll('*'))
-                        .filter(el => el.textContent && el.textContent.includes('{friend_name}') && el.childElementCount === 0);
-                    if (els.length > 0) {{
-                        const el = els[els.length-1];
+        global total_friends, sent_count
+        pending_friends = set(friends)
+        total_friends = len(friends)
+        sent_count = 0
+        
+        # 先把左侧列表滚回到最顶部
+        await page.mouse.move(150, 400)
+        await page.mouse.wheel(0, -10000)
+        await asyncio.sleep(1)
+        
+        print(f"▶️ 开始按列表就近原则（从上到下）扫描好友...")
+        
+        for attempt in range(40):
+            if not pending_friends:
+                print("✅ 所有目标好友均已处理完毕！")
+                break
+                
+            found_friend = await page.evaluate(f'''(pending) => {{
+                const els = Array.from(document.querySelectorAll('*'))
+                    .filter(el => {{
+                        if (el.childElementCount !== 0 || !el.textContent) return false;
+                        const text = el.textContent.trim();
+                        // 必须在左侧列表区域 (x < 400, 防止点到右侧聊天框的标题导致进主页)
                         const rect = el.getBoundingClientRect();
-                        if (rect.height > 0) {{
-                            el.scrollIntoView({{behavior: 'smooth', block: 'center'}});
-                            return {{x: rect.x, y: rect.y, w: rect.width, h: rect.height}};
-                        }}
+                        if (rect.x > 400 || rect.y < 50 || rect.width === 0) return false;
+                        // 优先严格全等匹配，防止“学长2”错误匹配“学长”
+                        if (pending.includes(text)) return true;
+                        return false;
+                    }});
+                    
+                if (els.length > 0) {{
+                    const el = els[0];
+                    const rect = el.getBoundingClientRect();
+                    const text = el.textContent.trim();
+                    const name = pending.find(f => text === f);
+                    el.scrollIntoView({{behavior: 'smooth', block: 'center'}});
+                    return {{name: name, x: rect.x, y: rect.y, w: rect.width, h: rect.height}};
+                }}
+                
+                // 如果严格全等没找到，再尝试前缀匹配（应对极少数带有不可见字符的情况）
+                const fallbackEls = Array.from(document.querySelectorAll('*'))
+                    .filter(el => {{
+                        if (el.childElementCount !== 0 || !el.textContent) return false;
+                        const text = el.textContent.trim();
+                        const rect = el.getBoundingClientRect();
+                        if (rect.x > 400 || rect.y < 50 || rect.width === 0) return false;
+                        // 按长度排序，优先匹配长的
+                        const sorted = [...pending].sort((a,b) => b.length - a.length);
+                        return sorted.some(f => text.startsWith(f));
+                    }});
+                    
+                if (fallbackEls.length > 0) {{
+                    const el = fallbackEls[0];
+                    const text = el.textContent.trim();
+                    const sorted = [...pending].sort((a,b) => b.length - a.length);
+                    const name = sorted.find(f => text.startsWith(f));
+                    el.scrollIntoView({{behavior: 'smooth', block: 'center'}});
+                    return {{name: name, x: el.getBoundingClientRect().x, y: el.getBoundingClientRect().y}};
+                }}
+                
+                return null;
+            }}''', list(pending_friends))
+            
+            if found_friend:
+                friend_name = found_friend['name']
+                processed_count = total_friends - len(pending_friends) + 1
+                base_pct = 20 + int(70 * processed_count / total_friends)
+                
+                print(f"\\n======================================")
+                print(f"📍 就近发现未处理好友: {friend_name}")
+                update_progress(base_pct, f"定位到好友: {friend_name}")
+                
+                # 等待平滑滚动（smooth scroll）完成！非常重要，否则鼠标会点到滚动前的位置导致乱序点击！
+                await asyncio.sleep(1.0)
+                
+                final_box = await page.evaluate(f'''(name) => {{
+                    const els = Array.from(document.querySelectorAll('*'))
+                        .filter(el => {{
+                            if (el.childElementCount !== 0 || !el.textContent) return false;
+                            const rect = el.getBoundingClientRect();
+                            if (rect.x > 400 || rect.y < 50 || rect.width === 0) return false;
+                            const text = el.textContent.trim();
+                            return text === name || text.startsWith(name);
+                        }});
+                    if (els.length > 0) {{
+                        const rect = els[els.length-1].getBoundingClientRect();
+                        return {{x: rect.x, y: rect.y, w: rect.width, h: rect.height}};
                     }}
                     return null;
-                }}''')
-                
-                if found_box:
-                    break
-                    
-                print(f"🔄 当前可视区未发现【{friend_name}】，尝试向下滚动聊天列表...")
-                # 将鼠标移动到左侧聊天列表区域并滚动
-                await page.mouse.move(150, 400)
-                await page.mouse.wheel(0, 1000)
-                await asyncio.sleep(2)
-                
-            if found_box:
-                # 重新获取滚动后的绝对坐标
-                final_box = await page.evaluate(f'''() => {{
-                    const els = Array.from(document.querySelectorAll('*'))
-                        .filter(el => el.textContent && el.textContent.includes('{friend_name}') && el.childElementCount === 0);
-                    const rect = els[els.length-1].getBoundingClientRect();
-                    return {{x: rect.x, y: rect.y, w: rect.width, h: rect.height}};
-                }}''')
+                }}''', friend_name)
                 
                 if not final_box:
+                    print("⚠️ 滚动后未能重新定位到该好友元素，跳过。")
                     continue
                     
-                # 在 x 轴增加较大随机偏移 (5~40像素)，模拟点在空白区域的随机位置
                 click_x = final_box['x'] + random.uniform(5, 40)
+                # 正下方白底区域
                 click_y = final_box['y'] + final_box['h'] + 12
                 
-                # 在移动鼠标时，分段模拟人类轨迹
                 await page.mouse.move(click_x + random.uniform(-10, 10), click_y + random.uniform(-5, 5))
                 await asyncio.sleep(0.1)
                 await page.mouse.move(click_x, click_y)
                 await asyncio.sleep(0.5)
                 await safe_click(click_x, click_y)
-                print(f"✅ 已成功通过检测名字锁定【{friend_name}】，并安全点击了其正下方的【聊天预览空白区】")
-            else:
-                print(f"⚠️ 翻遍了列表也未能找到名字包含【{friend_name}】的元素，自动回到列表顶部...")
-                # 找不到人的时候，把鼠标移回左侧列表并往上狂滚，回到顶部，防止影响下一个人的寻找
-                await page.mouse.move(150, 400)
-                await page.mouse.wheel(0, -10000)
-                await asyncio.sleep(1)
-                continue
-            
-            # 等待聊天框加载完成
-            await asyncio.sleep(3)
-            
-            # 点击笑脸菜单
-            print("实时定位表情菜单按钮...")
-            smile_box = await page.evaluate('''() => {
-                const btn = document.querySelector('svg.messageMsgInputiconAction');
-                if (btn) {
-                    const rect = btn.getBoundingClientRect();
-                    return {x: rect.x, y: rect.y, w: rect.width, h: rect.height};
-                }
-                return null;
-            }''')
-            
-            if smile_box:
-                # 使用鼠标真实的绝对坐标点击，100% 触发前端 React 监听器
-                await safe_click(smile_box['x'] + smile_box['w']/2, smile_box['y'] + smile_box['h']/2)
-                print("✅ 已成功点击笑脸菜单")
-                await asyncio.sleep(2)
+                print(f"✅ 已成功进入【{friend_name}】的聊天框")
+                update_progress(base_pct + 1, f"进入【{friend_name}】聊天框...")
                 
-                # 寻找并点击续火花表情
-                print("实时识别菜单中的【续火花】表情...")
-                huohua_clicked = await page.evaluate('''() => {
-                    // 找文字包含"续火花"的元素
-                    const els = Array.from(document.querySelectorAll('*')).filter(el => el.textContent === '续火花');
-                    if (els.length > 0) {
-                        const textEl = els[els.length-1];
-                        const parent = textEl.parentElement;
-                        if(parent) {
-                            const imgBox = parent.querySelector('[data-apm-action=\"EmojiItem\"]') || parent;
-                            if ("''' + str(is_test_mode).lower() + '''" === "true") {
-                                imgBox.style.border = "3px solid red";
-                                imgBox.scrollIntoView({behavior: "smooth", block: "center"});
-                            } else {
-                                imgBox.click();
-                            }
-                            return true;
-                        }
+                await asyncio.sleep(3)
+                
+                print("实时定位表情菜单按钮...")
+                update_progress(base_pct + 2, "查找表情面板...")
+                smile_box = await page.evaluate('''() => {
+                    const btn = document.querySelector('svg.messageMsgInputiconAction');
+                    if (btn) {
+                        const rect = btn.getBoundingClientRect();
+                        return {x: rect.x, y: rect.y, w: rect.width, h: rect.height};
                     }
-                    return false;
+                    return null;
                 }''')
                 
-                if huohua_clicked:
-                    if is_test_mode:
-                        print("🧪 【测试模式】已定位到“续火花”表情并高亮，跳过发送操作。")
-                        await asyncio.sleep(3)
-                        # 关闭表情面板，防止它的透明遮罩拦截下一个人的点击
-                        await safe_press("Escape")
-                        await safe_click(10, 10)
-                    else:
-                        print("✅ 已成功点击“续火花”表情！")
-                        await asyncio.sleep(1)
-                        
-                        # 抖音网页版的表情可能只是填入了输入框，或者已经直接发出(贴纸)。
-                        # 为了保险，尝试点击发送按钮或回车。
-                        await page.evaluate('''() => {
-                            const btn = document.querySelector('.e2e-send-msg-btn, .messageMsgInputpublishBtn');
-                            if (btn) {
-                                const clickTarget = btn.closest('div') || btn;
-                                clickTarget.click();
+                if smile_box:
+                    await safe_click(smile_box['x'] + smile_box['w']/2, smile_box['y'] + smile_box['h']/2)
+                    print("✅ 已成功点击笑脸菜单")
+                    update_progress(base_pct + 3, "识别续火花表情...")
+                    await asyncio.sleep(2)
+                    
+                    print("实时识别菜单中的【续火花】表情...")
+                    huohua_clicked = await page.evaluate('''() => {
+                        const els = Array.from(document.querySelectorAll('*')).filter(el => el.textContent === '续火花');
+                        if (els.length > 0) {
+                            const parent = els[els.length-1].parentElement;
+                            if(parent) {
+                                const imgBox = parent.querySelector('[data-apm-action="EmojiItem"]') || parent;
+                                if ("''' + str(is_test_mode).lower() + '''" === "true") {
+                                    imgBox.style.border = "3px solid red";
+                                    imgBox.scrollIntoView({behavior: "smooth", block: "center"});
+                                } else {
+                                    imgBox.click();
+                                }
+                                return true;
                             }
-                        }''')
-                        print("✅ 火花已成功发送！")
-                        
-                        await asyncio.sleep(2)
-                else:
-                    print("⚠️ 未找到续火花表情。尝试发送第一个推荐表情...")
-                    fallback_clicked = await page.evaluate('''() => {
-                        const firstItem = document.querySelector('.emoji-panel [data-apm-action=\"EmojiItem\"], .emojiEmojiItemimgBox');
-                        if (firstItem) {
-                            if ("''' + str(is_test_mode).lower() + '''" === "true") {
-                                firstItem.style.border = "3px solid red";
-                                firstItem.scrollIntoView({behavior: "smooth", block: "center"});
-                            } else {
-                                firstItem.click();
-                            }
-                            return true;
                         }
                         return false;
                     }''')
-                    if fallback_clicked:
+                    
+                    if huohua_clicked:
                         if is_test_mode:
-                            print("🧪 【测试模式】已定位到备用表情并高亮，跳过发送操作。")
+                            print("🧪 【测试模式】跳过发送操作。")
                             await asyncio.sleep(3)
-                            # 关闭表情面板
                             await safe_press("Escape")
                             await safe_click(10, 10)
                         else:
-                            print("✅ 已点击第一个备用表情")
+                            print("✅ 已成功点击“续火花”表情！")
                             await asyncio.sleep(1)
-                            
                             await page.evaluate('''() => {
                                 const btn = document.querySelector('.e2e-send-msg-btn, .messageMsgInputpublishBtn');
-                                if (btn) {
-                                    const clickTarget = btn.closest('div') || btn;
-                                    clickTarget.click();
-                                }
+                                if (btn) { (btn.closest('div') || btn).click(); }
                             }''')
-                            print("✅ 备用表情已成功发送！")
-                                
+                            print("✅ 火花已成功发送！")
+                            update_progress(base_pct + 4, f"【{friend_name}】火花发送完毕！")
                             await asyncio.sleep(2)
                     else:
-                        print("❌ 表情面板中没有找到任何可点击的表情")
-            else:
-                print("❌ 未能在右侧聊天框底部找到表情(笑脸)图标")
+                        print("⚠️ 未找到续火花表情。尝试发送第一个推荐表情...")
+                        fallback_clicked = await page.evaluate('''() => {
+                            const firstItem = document.querySelector('.emoji-panel [data-apm-action="EmojiItem"], .emojiEmojiItemimgBox');
+                            if (firstItem) {
+                                if ("''' + str(is_test_mode).lower() + '''" === "true") {
+                                    firstItem.style.border = "3px solid red";
+                                    firstItem.scrollIntoView({behavior: "smooth", block: "center"});
+                                } else {
+                                    firstItem.click();
+                                }
+                                return true;
+                            }
+                            return false;
+                        }''')
+                        if fallback_clicked:
+                            if is_test_mode:
+                                print("🧪 【测试模式】跳过发送操作。")
+                                await asyncio.sleep(3)
+                                await safe_press("Escape")
+                                await safe_click(10, 10)
+                            else:
+                                print("✅ 已点击备用表情并发送！")
+                                await asyncio.sleep(1)
+                                await page.evaluate('''() => {
+                                    const btn = document.querySelector('.e2e-send-msg-btn, .messageMsgInputpublishBtn');
+                                    if (btn) { (btn.closest('div') || btn).click(); }
+                                }''')
+                                update_progress(base_pct + 4, f"【{friend_name}】备用表情发送完毕！")
+                                await asyncio.sleep(2)
+                        else:
+                            print("❌ 表情面板中没有可点击的表情")
+                else:
+                    print("❌ 未能找到笑脸图标")
+                    
+                pending_friends.remove(friend_name)
+                sent_count += 1
+                await asyncio.sleep(2)
+                continue
                 
-            await asyncio.sleep(2)
+            print(f"🔄 当前可视区未发现剩余的待处理好友，向下滚动列表...")
+            await page.mouse.move(150, 400)
+            await page.mouse.wheel(0, 800)
+            await asyncio.sleep(1.5)
+
         
         print("\\n🎉 自动化流程结束。浏览器将在 5 秒后自动关闭...")
+        update_progress(95, "自动化流程结束，准备关闭浏览器...")
         await asyncio.sleep(5)
+        close_progress()
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
@@ -324,10 +452,13 @@ if __name__ == "__main__":
         if "has been closed" in str(e) or "TargetClosedError" in str(type(e)):
             print("\n==================================================")
             print("🛑 任务中止：检测到您已手动关闭浏览器，运行自动终止。")
+            close_progress()
             sys.exit(1)
         else:
+            close_progress()
             raise
     except KeyboardInterrupt:
         print("\n==================================================")
         print("🛑 任务中止：用户手动停止运行。")
+        close_progress()
         sys.exit(1)

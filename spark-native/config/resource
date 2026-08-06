@@ -1,0 +1,12 @@
+{
+  "data-share": {
+    "shares": [
+      {
+        "name": "spark-native"
+      },
+      {
+        "name": "spark-native/data"
+      }
+    ]
+  }
+}

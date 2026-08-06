@@ -1,0 +1,20 @@
+{
+  "docker-project": {
+    "projects": [
+      {
+        "name": "SparkAssistant",
+        "path": "docker"
+      }
+    ]
+  },
+  "data-share": {
+    "shares": [
+      {
+        "name": "SparkAssistant"
+      },
+      {
+        "name": "SparkAssistant/data"
+      }
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  sparkassistant:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    image: sparkassistant:1.3.6
+    container_name: sparkassistant
+    restart: unless-stopped
+    ports:
+      - "{host_port}:8080"
+    environment:
+      - DOUYIN_HEADLESS=true
+    volumes:
+      - "${TRIM_APPDEST}/data:/app/data"

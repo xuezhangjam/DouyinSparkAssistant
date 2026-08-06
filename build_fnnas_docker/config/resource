@@ -1,0 +1,20 @@
+{
+  "docker-project": {
+    "projects": [
+      {
+        "name": "build_fnnas_docker",
+        "path": "docker"
+      }
+    ]
+  },
+  "data-share": {
+    "shares": [
+      {
+        "name": "build_fnnas_docker"
+      },
+      {
+        "name": "build_fnnas_docker/data"
+      }
+    ]
+  }
+}
