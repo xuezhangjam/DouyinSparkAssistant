@@ -382,10 +382,7 @@ async def main(client_id):
                         else:
                             print("✅ 已成功点击“续火花”表情！")
                             await asyncio.sleep(1)
-                            await page.evaluate('''() => {
-                                const btn = document.querySelector('.e2e-send-msg-btn, .messageMsgInputpublishBtn');
-                                if (btn) { (btn.closest('div') || btn).click(); }
-                            }''')
+                            await page.keyboard.press('Enter')
                             print("✅ 火花已成功发送！")
                             update_progress(base_pct + 4, f"【{friend_name}】火花发送完毕！")
                             await asyncio.sleep(2)
@@ -413,10 +410,7 @@ async def main(client_id):
                             else:
                                 print("✅ 已点击备用表情并发送！")
                                 await asyncio.sleep(1)
-                                await page.evaluate('''() => {
-                                    const btn = document.querySelector('.e2e-send-msg-btn, .messageMsgInputpublishBtn');
-                                    if (btn) { (btn.closest('div') || btn).click(); }
-                                }''')
+                                await page.keyboard.press('Enter')
                                 update_progress(base_pct + 4, f"【{friend_name}】备用表情发送完毕！")
                                 await asyncio.sleep(2)
                         else:

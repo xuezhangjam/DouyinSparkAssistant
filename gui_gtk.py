@@ -758,7 +758,7 @@ class AboutDialog(Adw.Window):
         lbl_sub.add_css_class("dim-label")
         top_box.append(lbl_sub)
         
-        btn_ver = Gtk.Button(label="1.3.11")
+        btn_ver = Gtk.Button(label="1.3.12")
         btn_ver.add_css_class("pill")
         btn_ver.set_sensitive(False)
         btn_ver.set_halign(Gtk.Align.CENTER)
