@@ -13,7 +13,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:title="火花助手 (MD3版)" />
+            app:title="火花助手 (V3 高级版)" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -58,6 +58,19 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:hint="定时发送时间 (例如 08:30，留空则立刻运行)"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_marginBottom="16dp">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="time"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:hint="输入目标好友备注名（按换行或逗号分隔）"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_marginBottom="24dp">
@@ -83,7 +96,7 @@
                 android:id="@+id/btnStart"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:text="步骤二：保存名单并启动"
+                android:text="步骤二：保存并启动任务"
                 style="@style/Widget.Material3.Button"
                 android:layout_marginBottom="16dp"/>
 

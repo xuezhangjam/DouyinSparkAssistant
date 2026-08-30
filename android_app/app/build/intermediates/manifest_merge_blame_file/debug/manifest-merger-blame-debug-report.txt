@@ -10,97 +10,104 @@
 9        android:targetSdkVersion="33" />
 9-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml
 10
-11    <permission
-11-->[androidx.core:core:1.9.0] /home/admin/.gradle/caches/transforms-3/c73afc1fa215d9ca128620a3c01802b0/transformed/core-1.9.0/AndroidManifest.xml:22:5-24:47
-12        android:name="com.jam.sparkassistant.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
-12-->[androidx.core:core:1.9.0] /home/admin/.gradle/caches/transforms-3/c73afc1fa215d9ca128620a3c01802b0/transformed/core-1.9.0/AndroidManifest.xml:23:9-81
-13        android:protectionLevel="signature" />
-13-->[androidx.core:core:1.9.0] /home/admin/.gradle/caches/transforms-3/c73afc1fa215d9ca128620a3c01802b0/transformed/core-1.9.0/AndroidManifest.xml:24:9-44
+11    <queries>
+11-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:5:5-7:15
+12        <package android:name="com.ss.android.ugc.aweme" />
+12-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:6:9-60
+12-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:6:18-57
+13    </queries>
 14
-15    <uses-permission android:name="com.jam.sparkassistant.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
-15-->[androidx.core:core:1.9.0] /home/admin/.gradle/caches/transforms-3/c73afc1fa215d9ca128620a3c01802b0/transformed/core-1.9.0/AndroidManifest.xml:26:5-97
-15-->[androidx.core:core:1.9.0] /home/admin/.gradle/caches/transforms-3/c73afc1fa215d9ca128620a3c01802b0/transformed/core-1.9.0/AndroidManifest.xml:26:22-94
-16
-17    <application
-17-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:5:5-33:19
-18        android:allowBackup="true"
-18-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:6:9-35
-19        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
-19-->[androidx.core:core:1.9.0] /home/admin/.gradle/caches/transforms-3/c73afc1fa215d9ca128620a3c01802b0/transformed/core-1.9.0/AndroidManifest.xml:28:18-86
-20        android:debuggable="true"
-21        android:extractNativeLibs="false"
-22        android:icon="@mipmap/ic_launcher"
-22-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:7:9-43
-23        android:label="火花助手"
-23-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:8:9-29
-24        android:roundIcon="@mipmap/ic_launcher_round"
-24-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:9:9-54
-25        android:supportsRtl="true"
-25-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:10:9-35
-26        android:theme="@style/Theme.Material3.DayNight.NoActionBar" >
-26-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:11:9-68
-27        <activity
-27-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:13:9-20:20
-28            android:name="com.jam.sparkassistant.MainActivity"
-28-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:14:13-41
-29            android:exported="true" >
-29-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:15:13-36
-30            <intent-filter>
-30-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:16:13-19:29
-31                <action android:name="android.intent.action.MAIN" />
-31-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:17:17-69
-31-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:17:25-66
-32
-33                <category android:name="android.intent.category.LAUNCHER" />
-33-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:18:17-77
-33-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:18:27-74
-34            </intent-filter>
-35        </activity>
+15    <permission
+15-->[androidx.core:core:1.9.0] /home/admin/.gradle/caches/transforms-3/c73afc1fa215d9ca128620a3c01802b0/transformed/core-1.9.0/AndroidManifest.xml:22:5-24:47
+16        android:name="com.jam.sparkassistant.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+16-->[androidx.core:core:1.9.0] /home/admin/.gradle/caches/transforms-3/c73afc1fa215d9ca128620a3c01802b0/transformed/core-1.9.0/AndroidManifest.xml:23:9-81
+17        android:protectionLevel="signature" />
+17-->[androidx.core:core:1.9.0] /home/admin/.gradle/caches/transforms-3/c73afc1fa215d9ca128620a3c01802b0/transformed/core-1.9.0/AndroidManifest.xml:24:9-44
+18
+19    <uses-permission android:name="com.jam.sparkassistant.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+19-->[androidx.core:core:1.9.0] /home/admin/.gradle/caches/transforms-3/c73afc1fa215d9ca128620a3c01802b0/transformed/core-1.9.0/AndroidManifest.xml:26:5-97
+19-->[androidx.core:core:1.9.0] /home/admin/.gradle/caches/transforms-3/c73afc1fa215d9ca128620a3c01802b0/transformed/core-1.9.0/AndroidManifest.xml:26:22-94
+20
+21    <application
+21-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:9:5-37:19
+22        android:allowBackup="true"
+22-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:10:9-35
+23        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+23-->[androidx.core:core:1.9.0] /home/admin/.gradle/caches/transforms-3/c73afc1fa215d9ca128620a3c01802b0/transformed/core-1.9.0/AndroidManifest.xml:28:18-86
+24        android:debuggable="true"
+25        android:extractNativeLibs="false"
+26        android:icon="@mipmap/ic_launcher"
+26-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:11:9-43
+27        android:label="火花助手"
+27-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:12:9-29
+28        android:roundIcon="@mipmap/ic_launcher_round"
+28-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:13:9-54
+29        android:supportsRtl="true"
+29-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:14:9-35
+30        android:theme="@style/Theme.Material3.DayNight.NoActionBar" >
+30-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:15:9-68
+31        <activity
+31-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:17:9-24:20
+32            android:name="com.jam.sparkassistant.MainActivity"
+32-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:18:13-41
+33            android:exported="true" >
+33-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:19:13-36
+34            <intent-filter>
+34-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:20:13-23:29
+35                <action android:name="android.intent.action.MAIN" />
+35-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:21:17-69
+35-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:21:25-66
 36
-37        <service
-37-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:22:9-32:19
-38            android:name="com.jam.sparkassistant.DouyinAccessibilityService"
-38-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:23:13-55
-39            android:exported="true"
-39-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:25:13-36
-40            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE" >
-40-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:24:13-79
-41            <intent-filter>
-41-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:26:13-28:29
-42                <action android:name="android.accessibilityservice.AccessibilityService" />
-42-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:27:17-92
-42-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:27:25-89
-43            </intent-filter>
-44
-45            <meta-data
-45-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:29:13-31:72
-46                android:name="android.accessibilityservice"
-46-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:30:17-60
-47                android:resource="@xml/accessibility_service_config" />
-47-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:31:17-69
-48        </service>
-49
-50        <provider
-50-->[androidx.emoji2:emoji2:1.2.0] /home/admin/.gradle/caches/transforms-3/8a0777f78bcfa47490aa03185cd86673/transformed/jetified-emoji2-1.2.0/AndroidManifest.xml:24:9-32:20
-51            android:name="androidx.startup.InitializationProvider"
-51-->[androidx.emoji2:emoji2:1.2.0] /home/admin/.gradle/caches/transforms-3/8a0777f78bcfa47490aa03185cd86673/transformed/jetified-emoji2-1.2.0/AndroidManifest.xml:25:13-67
-52            android:authorities="com.jam.sparkassistant.androidx-startup"
-52-->[androidx.emoji2:emoji2:1.2.0] /home/admin/.gradle/caches/transforms-3/8a0777f78bcfa47490aa03185cd86673/transformed/jetified-emoji2-1.2.0/AndroidManifest.xml:26:13-68
-53            android:exported="false" >
-53-->[androidx.emoji2:emoji2:1.2.0] /home/admin/.gradle/caches/transforms-3/8a0777f78bcfa47490aa03185cd86673/transformed/jetified-emoji2-1.2.0/AndroidManifest.xml:27:13-37
-54            <meta-data
-54-->[androidx.emoji2:emoji2:1.2.0] /home/admin/.gradle/caches/transforms-3/8a0777f78bcfa47490aa03185cd86673/transformed/jetified-emoji2-1.2.0/AndroidManifest.xml:29:13-31:52
-55                android:name="androidx.emoji2.text.EmojiCompatInitializer"
-55-->[androidx.emoji2:emoji2:1.2.0] /home/admin/.gradle/caches/transforms-3/8a0777f78bcfa47490aa03185cd86673/transformed/jetified-emoji2-1.2.0/AndroidManifest.xml:30:17-75
-56                android:value="androidx.startup" />
-56-->[androidx.emoji2:emoji2:1.2.0] /home/admin/.gradle/caches/transforms-3/8a0777f78bcfa47490aa03185cd86673/transformed/jetified-emoji2-1.2.0/AndroidManifest.xml:31:17-49
-57            <meta-data
-57-->[androidx.lifecycle:lifecycle-process:2.4.1] /home/admin/.gradle/caches/transforms-3/1d96e2c00249b5a696793deadf4ca594/transformed/jetified-lifecycle-process-2.4.1/AndroidManifest.xml:31:13-33:52
-58                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
-58-->[androidx.lifecycle:lifecycle-process:2.4.1] /home/admin/.gradle/caches/transforms-3/1d96e2c00249b5a696793deadf4ca594/transformed/jetified-lifecycle-process-2.4.1/AndroidManifest.xml:32:17-78
-59                android:value="androidx.startup" />
-59-->[androidx.lifecycle:lifecycle-process:2.4.1] /home/admin/.gradle/caches/transforms-3/1d96e2c00249b5a696793deadf4ca594/transformed/jetified-lifecycle-process-2.4.1/AndroidManifest.xml:33:17-49
-60        </provider>
-61    </application>
-62
-63</manifest>
+37                <category android:name="android.intent.category.LAUNCHER" />
+37-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:22:17-77
+37-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:22:27-74
+38            </intent-filter>
+39        </activity>
+40
+41        <service
+41-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:26:9-36:19
+42            android:name="com.jam.sparkassistant.DouyinAccessibilityService"
+42-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:27:13-55
+43            android:exported="true"
+43-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:29:13-36
+44            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE" >
+44-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:28:13-79
+45            <intent-filter>
+45-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:30:13-32:29
+46                <action android:name="android.accessibilityservice.AccessibilityService" />
+46-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:31:17-92
+46-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:31:25-89
+47            </intent-filter>
+48
+49            <meta-data
+49-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:33:13-35:72
+50                android:name="android.accessibilityservice"
+50-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:34:17-60
+51                android:resource="@xml/accessibility_service_config" />
+51-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:35:17-69
+52        </service>
+53
+54        <provider
+54-->[androidx.emoji2:emoji2:1.2.0] /home/admin/.gradle/caches/transforms-3/8a0777f78bcfa47490aa03185cd86673/transformed/jetified-emoji2-1.2.0/AndroidManifest.xml:24:9-32:20
+55            android:name="androidx.startup.InitializationProvider"
+55-->[androidx.emoji2:emoji2:1.2.0] /home/admin/.gradle/caches/transforms-3/8a0777f78bcfa47490aa03185cd86673/transformed/jetified-emoji2-1.2.0/AndroidManifest.xml:25:13-67
+56            android:authorities="com.jam.sparkassistant.androidx-startup"
+56-->[androidx.emoji2:emoji2:1.2.0] /home/admin/.gradle/caches/transforms-3/8a0777f78bcfa47490aa03185cd86673/transformed/jetified-emoji2-1.2.0/AndroidManifest.xml:26:13-68
+57            android:exported="false" >
+57-->[androidx.emoji2:emoji2:1.2.0] /home/admin/.gradle/caches/transforms-3/8a0777f78bcfa47490aa03185cd86673/transformed/jetified-emoji2-1.2.0/AndroidManifest.xml:27:13-37
+58            <meta-data
+58-->[androidx.emoji2:emoji2:1.2.0] /home/admin/.gradle/caches/transforms-3/8a0777f78bcfa47490aa03185cd86673/transformed/jetified-emoji2-1.2.0/AndroidManifest.xml:29:13-31:52
+59                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+59-->[androidx.emoji2:emoji2:1.2.0] /home/admin/.gradle/caches/transforms-3/8a0777f78bcfa47490aa03185cd86673/transformed/jetified-emoji2-1.2.0/AndroidManifest.xml:30:17-75
+60                android:value="androidx.startup" />
+60-->[androidx.emoji2:emoji2:1.2.0] /home/admin/.gradle/caches/transforms-3/8a0777f78bcfa47490aa03185cd86673/transformed/jetified-emoji2-1.2.0/AndroidManifest.xml:31:17-49
+61            <meta-data
+61-->[androidx.lifecycle:lifecycle-process:2.4.1] /home/admin/.gradle/caches/transforms-3/1d96e2c00249b5a696793deadf4ca594/transformed/jetified-lifecycle-process-2.4.1/AndroidManifest.xml:31:13-33:52
+62                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+62-->[androidx.lifecycle:lifecycle-process:2.4.1] /home/admin/.gradle/caches/transforms-3/1d96e2c00249b5a696793deadf4ca594/transformed/jetified-lifecycle-process-2.4.1/AndroidManifest.xml:32:17-78
+63                android:value="androidx.startup" />
+63-->[androidx.lifecycle:lifecycle-process:2.4.1] /home/admin/.gradle/caches/transforms-3/1d96e2c00249b5a696793deadf4ca594/transformed/jetified-lifecycle-process-2.4.1/AndroidManifest.xml:33:17-49
+64        </provider>
+65    </application>
+66
+67</manifest>

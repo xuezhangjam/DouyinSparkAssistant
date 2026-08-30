@@ -8,6 +8,10 @@
         android:minSdkVersion="24"
         android:targetSdkVersion="33" />
 
+    <queries>
+        <package android:name="com.ss.android.ugc.aweme" />
+    </queries>
+
     <permission
         android:name="com.jam.sparkassistant.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
         android:protectionLevel="signature" />

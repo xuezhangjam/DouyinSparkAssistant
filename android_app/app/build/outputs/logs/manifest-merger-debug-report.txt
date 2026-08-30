@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:2:1-34:12
-INJECTED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:2:1-34:12
-INJECTED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:2:1-34:12
-INJECTED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:2:1-34:12
+ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:2:1-38:12
+INJECTED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:2:1-38:12
+INJECTED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:2:1-38:12
+INJECTED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:2:1-38:12
 MERGED from [androidx.databinding:viewbinding:7.4.2] /home/admin/.gradle/caches/transforms-3/2e18597a66aca0e73484c23326c8a0e9/transformed/jetified-viewbinding-7.4.2/AndroidManifest.xml:2:1-7:12
 MERGED from [com.google.android.material:material:1.8.0] /home/admin/.gradle/caches/transforms-3/9ae6143ba7d88d1cbf68916d08d2afcb/transformed/material-1.8.0/AndroidManifest.xml:17:1-26:12
 MERGED from [androidx.constraintlayout:constraintlayout:2.1.4] /home/admin/.gradle/caches/transforms-3/fe5722c2d28764b765710ac6c318c6e8/transformed/constraintlayout-2.1.4/AndroidManifest.xml:2:1-11:12
@@ -45,25 +45,31 @@ MERGED from [androidx.documentfile:documentfile:1.0.0] /home/admin/.gradle/cache
 MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] /home/admin/.gradle/caches/transforms-3/2ff53fee4bc33a1da5cdbfe55cfab510/transformed/localbroadcastmanager-1.0.0/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.print:print:1.0.0] /home/admin/.gradle/caches/transforms-3/a21766c7c1a00190a294c68fee7e28e6/transformed/print-1.0.0/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.annotation:annotation-experimental:1.3.0] /home/admin/.gradle/caches/transforms-3/d15244ba7a35fe180ae1116dac8e0689/transformed/jetified-annotation-experimental-1.3.0/AndroidManifest.xml:17:1-22:12
-INJECTED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:2:1-34:12
-INJECTED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:2:1-34:12
-INJECTED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:2:1-34:12
+INJECTED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:2:1-38:12
+INJECTED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:2:1-38:12
+INJECTED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:2:1-38:12
 	package
 		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:3:5-37
 		INJECTED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml
 		INJECTED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml
 	android:versionName
 		INJECTED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml
-		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:2:1-34:12
+		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:2:1-38:12
 		INJECTED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml
 	android:versionCode
 		INJECTED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml
-		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:2:1-34:12
+		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:2:1-38:12
 		INJECTED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml
 	xmlns:android
 		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:2:11-69
+queries
+ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:5:5-7:15
+package#com.ss.android.ugc.aweme
+ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:6:9-60
+	android:name
+		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:6:18-57
 application
-ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:5:5-33:19
+ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:9:5-37:19
 MERGED from [com.google.android.material:material:1.8.0] /home/admin/.gradle/caches/transforms-3/9ae6143ba7d88d1cbf68916d08d2afcb/transformed/material-1.8.0/AndroidManifest.xml:24:5-20
 MERGED from [com.google.android.material:material:1.8.0] /home/admin/.gradle/caches/transforms-3/9ae6143ba7d88d1cbf68916d08d2afcb/transformed/material-1.8.0/AndroidManifest.xml:24:5-20
 MERGED from [androidx.constraintlayout:constraintlayout:2.1.4] /home/admin/.gradle/caches/transforms-3/fe5722c2d28764b765710ac6c318c6e8/transformed/constraintlayout-2.1.4/AndroidManifest.xml:9:5-20
@@ -81,53 +87,53 @@ MERGED from [androidx.startup:startup-runtime:1.1.1] /home/admin/.gradle/caches/
 	android:appComponentFactory
 		ADDED from [androidx.core:core:1.9.0] /home/admin/.gradle/caches/transforms-3/c73afc1fa215d9ca128620a3c01802b0/transformed/core-1.9.0/AndroidManifest.xml:28:18-86
 	android:supportsRtl
-		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:10:9-35
+		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:14:9-35
 	android:label
-		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:8:9-29
+		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:12:9-29
 	android:roundIcon
-		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:9:9-54
+		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:13:9-54
 	android:icon
-		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:7:9-43
+		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:11:9-43
 	android:allowBackup
-		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:6:9-35
+		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:10:9-35
 	android:theme
-		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:11:9-68
+		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:15:9-68
 activity#com.jam.sparkassistant.MainActivity
-ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:13:9-20:20
+ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:17:9-24:20
 	android:exported
-		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:15:13-36
+		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:19:13-36
 	android:name
-		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:14:13-41
+		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:18:13-41
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:16:13-19:29
+ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:20:13-23:29
 action#android.intent.action.MAIN
-ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:17:17-69
+ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:21:17-69
 	android:name
-		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:17:25-66
+		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:21:25-66
 category#android.intent.category.LAUNCHER
-ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:18:17-77
+ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:22:17-77
 	android:name
-		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:18:27-74
+		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:22:27-74
 service#com.jam.sparkassistant.DouyinAccessibilityService
-ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:22:9-32:19
+ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:26:9-36:19
 	android:exported
-		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:25:13-36
+		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:29:13-36
 	android:permission
-		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:24:13-79
+		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:28:13-79
 	android:name
-		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:23:13-55
+		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:27:13-55
 intent-filter#action:name:android.accessibilityservice.AccessibilityService
-ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:26:13-28:29
+ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:30:13-32:29
 action#android.accessibilityservice.AccessibilityService
-ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:27:17-92
+ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:31:17-92
 	android:name
-		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:27:25-89
+		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:31:25-89
 meta-data#android.accessibilityservice
-ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:29:13-31:72
+ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:33:13-35:72
 	android:resource
-		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:31:17-69
+		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:35:17-69
 	android:name
-		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:30:17-60
+		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:34:17-60
 uses-sdk
 INJECTED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml

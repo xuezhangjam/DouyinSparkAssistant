@@ -2987,6 +2987,7 @@ id endToStart
 id enterAlways
 id enterAlwaysCollapsed
 id etFriends
+id etTime
 id exitUntilCollapsed
 id expand_activities_button
 id expanded_menu

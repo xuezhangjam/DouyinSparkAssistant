@@ -35,6 +35,9 @@ public final class ActivityMainBinding implements ViewBinding {
   public final TextInputEditText etFriends;
 
   @NonNull
+  public final TextInputEditText etTime;
+
+  @NonNull
   public final MaterialToolbar toolbar;
 
   @NonNull
@@ -42,12 +45,14 @@ public final class ActivityMainBinding implements ViewBinding {
 
   private ActivityMainBinding(@NonNull CoordinatorLayout rootView, @NonNull Button btnPermission,
       @NonNull Button btnStart, @NonNull Button btnStop, @NonNull TextInputEditText etFriends,
-      @NonNull MaterialToolbar toolbar, @NonNull TextView tvStatus) {
+      @NonNull TextInputEditText etTime, @NonNull MaterialToolbar toolbar,
+      @NonNull TextView tvStatus) {
     this.rootView = rootView;
     this.btnPermission = btnPermission;
     this.btnStart = btnStart;
     this.btnStop = btnStop;
     this.etFriends = etFriends;
+    this.etTime = etTime;
     this.toolbar = toolbar;
     this.tvStatus = tvStatus;
   }
@@ -103,6 +108,12 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.etTime;
+      TextInputEditText etTime = ViewBindings.findChildViewById(rootView, id);
+      if (etTime == null) {
+        break missingId;
+      }
+
       id = R.id.toolbar;
       MaterialToolbar toolbar = ViewBindings.findChildViewById(rootView, id);
       if (toolbar == null) {
@@ -116,7 +127,7 @@ public final class ActivityMainBinding implements ViewBinding {
       }
 
       return new ActivityMainBinding((CoordinatorLayout) rootView, btnPermission, btnStart, btnStop,
-          etFriends, toolbar, tvStatus);
+          etFriends, etTime, toolbar, tvStatus);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

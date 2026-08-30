@@ -2,13 +2,16 @@
 package com.jam.sparkassistant
 
 import android.accessibilityservice.AccessibilityService
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.Toast
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class DouyinAccessibilityService : AccessibilityService() {
     
@@ -18,6 +21,8 @@ class DouyinAccessibilityService : AccessibilityService() {
     
     companion object {
         var isRunning = false
+        var isWaitingForTime = false
+        var targetTime = ""
         var targetList: List<String> = emptyList()
         var currentIndex = 0
         var currentState = State.IDLE
@@ -33,10 +38,26 @@ class DouyinAccessibilityService : AccessibilityService() {
     private val handler = Handler(Looper.getMainLooper())
     private val pollRunnable = object : Runnable {
         override fun run() {
+            if (isWaitingForTime) {
+                val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
+                val currentTime = sdf.format(Date())
+                if (currentTime == targetTime) {
+                    isWaitingForTime = false
+                    isRunning = true
+                    startExecution()
+                    
+                    val launchIntent = packageManager.getLaunchIntentForPackage("com.ss.android.ugc.aweme")
+                    if (launchIntent != null) {
+                        launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        startActivity(launchIntent)
+                    }
+                }
+            }
+            
             if (isRunning) {
                 processState()
             }
-            handler.postDelayed(this, 1500) // Poll every 1.5 seconds
+            handler.postDelayed(this, 1500)
         }
     }
 
@@ -62,7 +83,7 @@ class DouyinAccessibilityService : AccessibilityService() {
         if (currentIndex >= targetList.size) {
             isRunning = false
             currentState = State.IDLE
-            handler.post { Toast.makeText(this, "所有续火花任务完成！", Toast.LENGTH_LONG).show() }
+            handler.post { Toast.makeText(this, "🎉 所有目标续火花完成！", Toast.LENGTH_LONG).show() }
             return
         }
         val targetName = targetList[currentIndex]
@@ -71,12 +92,9 @@ class DouyinAccessibilityService : AccessibilityService() {
             State.CLICK_TAB -> {
                 val nodes = root.findAccessibilityNodeInfosByText("消息")
                 for (node in nodes) {
-                    if (node.isClickable) {
-                        node.performAction(AccessibilityNodeInfo.ACTION_CLICK)
-                        currentState = State.FIND_FRIEND
-                        return
-                    } else if (node.parent?.isClickable == true) {
-                        node.parent.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+                    if (node.isClickable || node.parent?.isClickable == true) {
+                        val target = if (node.isClickable) node else node.parent
+                        target.performAction(AccessibilityNodeInfo.ACTION_CLICK)
                         currentState = State.FIND_FRIEND
                         return
                     }
@@ -85,27 +103,23 @@ class DouyinAccessibilityService : AccessibilityService() {
             State.FIND_FRIEND -> {
                 val targetNodes = root.findAccessibilityNodeInfosByText(targetName)
                 if (targetNodes.isNotEmpty()) {
-                    val node = targetNodes[0]
-                    var clickableParent = node
-                    while (clickableParent != null && !clickableParent.isClickable) {
-                        clickableParent = clickableParent.parent
+                    var node: AccessibilityNodeInfo? = targetNodes[0]
+                    while (node != null && !node.isClickable) {
+                        node = node.parent
                     }
-                    if (clickableParent != null) {
-                        clickableParent.performAction(AccessibilityNodeInfo.ACTION_CLICK)
+                    if (node != null) {
+                        node.performAction(AccessibilityNodeInfo.ACTION_CLICK)
                         currentState = State.CLICK_INPUT
                         return
                     }
                 }
                 
-                // If not found, try to scroll down. 
-                // We find a RecyclerView or ListView and scroll it.
                 val scrollableNodes = findScrollableNode(root)
                 if (scrollableNodes != null) {
                     scrollableNodes.performAction(AccessibilityNodeInfo.ACTION_SCROLL_FORWARD)
                 }
             }
             State.CLICK_INPUT -> {
-                // Find EditText to input emoji
                 val editTexts = findEditText(root)
                 if (editTexts != null) {
                     val arguments = Bundle()
@@ -113,7 +127,6 @@ class DouyinAccessibilityService : AccessibilityService() {
                     editTexts.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, arguments)
                     currentState = State.CLICK_SEND
                 } else {
-                    // Sometimes we need to click the bottom bar to show input
                     val chatInput = root.findAccessibilityNodeInfosByText("发送消息...")
                     if (chatInput.isNotEmpty()) {
                         chatInput[0].parent?.performAction(AccessibilityNodeInfo.ACTION_CLICK)
