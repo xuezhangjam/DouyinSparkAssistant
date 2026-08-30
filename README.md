@@ -18,33 +18,38 @@
 - **上帝视角测试模式**：零风险验证新客户，开启后自动化操作将只定位并高亮目标，不会进行任何破坏性点击，并配有鼠标/键盘轨迹可视化特效。
 - **(v1.3.12 新特性) 沉浸式进度显示**：独立悬浮的执行进度面板，现在完美支持显示自定义“客户备注名”，并在进度条下方实时呈现精确的“成功发送好友数”（如：[已发 2/5]），同时全局免疫 Linux 下的 `bitbrowser://` 弹窗干扰。
 
-## 📦 安装与运行
+## 📦 安装（推荐：一键安装包）
 
-### 1. 安装系统依赖 (以 Ubuntu/Debian 为例)
-本项目使用了原生的 GTK4 和 Libadwaita 绑定，需要先在系统层面安装依赖：
+前往 [Releases](https://github.com/xuezhangjam/DouyinSparkAssistant/releases) 下载最新版安装包，**双击安装即可**：
+
+| 系统 | 文件 |
+|---|---|
+| Ubuntu / Debian | `.deb` |
+| Fedora / openSUSE | `.rpm` |
+| fnOS | `.fpk` |
+
+> 安装完成后，在应用列表中搜索并打开 **"火花助手"** 即可。
+
+---
+
+## 🛠️ 从源码运行（开发者）
+
 ```bash
-sudo apt update
+# 1. 安装系统依赖
 sudo apt install python3-gi python3-gi-cairo gir1.2-gtk-4.0 gir1.2-adw-1 libappindicator3-1
-```
 
-### 2. 配置 Python 虚拟环境
-为了能够访问系统级的 GTK 库，创建虚拟环境时必须带上 `--system-site-packages` 参数：
-```bash
+# 2. 克隆仓库并进入目录
+git clone https://github.com/xuezhangjam/DouyinSparkAssistant.git
+cd DouyinSparkAssistant
+
+# 3. 创建虚拟环境并安装依赖
 python3 -m venv .venv --system-site-packages
 source .venv/bin/activate
-```
-
-### 3. 安装项目依赖
-```bash
 pip install -r requirements.txt
 playwright install chromium
-```
 
-### 4. 启动控制台
-```bash
+# 4. 启动
 python tray_runner.py
-# 或直接启动图形界面：
-# python gui_gtk.py
 ```
 
 ## 🛡️ 隐私与数据安全
