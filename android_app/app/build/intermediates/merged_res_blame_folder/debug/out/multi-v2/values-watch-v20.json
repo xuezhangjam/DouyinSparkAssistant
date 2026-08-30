@@ -1,0 +1,20 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.jam.sparkassistant.app-mergeDebugResources-27:/values-watch-v20/values-watch-v20.xml",
+            "map": [
+                {
+                    "source": "/home/admin/.gradle/caches/transforms-3/8d9343f569df63b726615d18b45679d4/transformed/appcompat-1.6.1/res/values-watch-v20/values-watch-v20.xml",
+                    "from": {
+                        "startLines": "2,5,8",
+                        "startColumns": "4,4,4",
+                        "startOffsets": "55,214,385",
+                        "endLines": "4,7,10",
+                        "endColumns": "12,12,12",
+                        "endOffsets": "209,380,553"
+                    }
+                }
+            ]
+        }
+    ]
+}
