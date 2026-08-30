@@ -18,37 +18,70 @@
 - **上帝视角测试模式**：零风险验证新客户，开启后自动化操作将只定位并高亮目标，不会进行任何破坏性点击，并配有鼠标/键盘轨迹可视化特效。
 - **(v1.3.12 新特性) 沉浸式进度显示**：独立悬浮的执行进度面板，现在完美支持显示自定义“客户备注名”，并在进度条下方实时呈现精确的“成功发送好友数”（如：[已发 2/5]），同时全局免疫 Linux 下的 `bitbrowser://` 弹窗干扰。
 
-## 📦 安装（推荐：一键安装包）
+## 📦 安装教程
 
-前往 [Releases](https://github.com/xuezhangjam/DouyinSparkAssistant/releases) 下载最新版安装包，**双击安装即可**：
+### 方式一：一键安装包（推荐）
 
-| 系统 | 文件 |
-|---|---|
-| Ubuntu / Debian | `.deb` |
-| Fedora / openSUSE | `.rpm` |
-| fnOS | `.fpk` |
+前往 [Releases](https://github.com/xuezhangjam/DouyinSparkAssistant/releases) 下载最新版安装包，选择对应系统的格式：
+
+| 系统 | 文件 | 安装命令 |
+|---|---|---|
+| Ubuntu / Debian | `.deb` | `sudo dpkg -i sparkassistant_*_amd64.deb` |
+| Fedora / RHEL / CentOS | `.rpm` | `sudo rpm -i sparkassistant-*.noarch.rpm` |
+| fnOS | `.fpk` | 在 fnOS 应用中心导入安装 |
 
 > 安装完成后，在应用列表中搜索并打开 **"火花助手"** 即可。
 
 ---
 
-## 🛠️ 从源码运行（开发者）
+### 方式二：从源码运行
+
+#### 1. 安装系统依赖
+
+<details>
+<summary><b>Ubuntu / Debian</b></summary>
 
 ```bash
-# 1. 安装系统依赖
+sudo apt update
 sudo apt install python3-gi python3-gi-cairo gir1.2-gtk-4.0 gir1.2-adw-1 libappindicator3-1
+```
+</details>
 
-# 2. 克隆仓库并进入目录
+<details>
+<summary><b>Fedora / RHEL / CentOS</b></summary>
+
+```bash
+sudo dnf install python3-gobject python3-cairo gtk4 libadwaita libappindicator-gtk3
+```
+</details>
+
+<details>
+<summary><b>Arch / Manjaro</b></summary>
+
+```bash
+sudo pacman -S python-gobject gtk4 libadwaita libappindicator-gtk3
+```
+</details>
+
+<details>
+<summary><b>openSUSE</b></summary>
+
+```bash
+sudo zypper install python3-gobject python3-gobject-cairo gtk4 libadwaita typelib-1_0-Gtk-4_0 typelib-1_0-Adw-1
+```
+</details>
+
+#### 2. 克隆仓库、安装依赖并启动
+
+```bash
 git clone https://github.com/xuezhangjam/DouyinSparkAssistant.git
 cd DouyinSparkAssistant
 
-# 3. 创建虚拟环境并安装依赖
 python3 -m venv .venv --system-site-packages
 source .venv/bin/activate
 pip install -r requirements.txt
 playwright install chromium
 
-# 4. 启动
 python tray_runner.py
 ```
 
