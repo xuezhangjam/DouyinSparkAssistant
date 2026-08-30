@@ -13,7 +13,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:title="火花助手 (V3 高级版)" />
+            app:title="火花助手 (多闪优化版 V4)" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -96,16 +96,33 @@
                 android:id="@+id/btnStart"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:text="步骤二：保存并启动任务"
+                android:text="步骤二：启动任务 (将跳转多闪)"
                 style="@style/Widget.Material3.Button"
                 android:layout_marginBottom="16dp"/>
 
-            <Button
-                android:id="@+id/btnStop"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:text="停止运行"
-                style="@style/Widget.Material3.Button.OutlinedButton"/>
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                
+                <Button
+                    android:id="@+id/btnStop"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:text="停止运行"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_marginEnd="8dp"/>
+                    
+                <Button
+                    android:id="@+id/btnAbout"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:text="关于软件"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_marginStart="8dp"/>
+            </LinearLayout>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

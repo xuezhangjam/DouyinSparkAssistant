@@ -64,10 +64,10 @@ INJECTED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidMani
 		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:2:11-69
 queries
 ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:5:5-7:15
-package#com.ss.android.ugc.aweme
-ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:6:9-60
+package#my.maya.android
+ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:6:9-51
 	android:name
-		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:6:18-57
+		ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:6:18-48
 application
 ADDED from /home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:9:5-37:19
 MERGED from [com.google.android.material:material:1.8.0] /home/admin/.gradle/caches/transforms-3/9ae6143ba7d88d1cbf68916d08d2afcb/transformed/material-1.8.0/AndroidManifest.xml:24:5-20

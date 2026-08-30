@@ -23,6 +23,9 @@ public final class ActivityMainBinding implements ViewBinding {
   private final CoordinatorLayout rootView;
 
   @NonNull
+  public final Button btnAbout;
+
+  @NonNull
   public final Button btnPermission;
 
   @NonNull
@@ -43,11 +46,12 @@ public final class ActivityMainBinding implements ViewBinding {
   @NonNull
   public final TextView tvStatus;
 
-  private ActivityMainBinding(@NonNull CoordinatorLayout rootView, @NonNull Button btnPermission,
-      @NonNull Button btnStart, @NonNull Button btnStop, @NonNull TextInputEditText etFriends,
-      @NonNull TextInputEditText etTime, @NonNull MaterialToolbar toolbar,
-      @NonNull TextView tvStatus) {
+  private ActivityMainBinding(@NonNull CoordinatorLayout rootView, @NonNull Button btnAbout,
+      @NonNull Button btnPermission, @NonNull Button btnStart, @NonNull Button btnStop,
+      @NonNull TextInputEditText etFriends, @NonNull TextInputEditText etTime,
+      @NonNull MaterialToolbar toolbar, @NonNull TextView tvStatus) {
     this.rootView = rootView;
+    this.btnAbout = btnAbout;
     this.btnPermission = btnPermission;
     this.btnStart = btnStart;
     this.btnStop = btnStop;
@@ -84,6 +88,12 @@ public final class ActivityMainBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.btnAbout;
+      Button btnAbout = ViewBindings.findChildViewById(rootView, id);
+      if (btnAbout == null) {
+        break missingId;
+      }
+
       id = R.id.btnPermission;
       Button btnPermission = ViewBindings.findChildViewById(rootView, id);
       if (btnPermission == null) {
@@ -126,8 +136,8 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ActivityMainBinding((CoordinatorLayout) rootView, btnPermission, btnStart, btnStop,
-          etFriends, etTime, toolbar, tvStatus);
+      return new ActivityMainBinding((CoordinatorLayout) rootView, btnAbout, btnPermission,
+          btnStart, btnStop, etFriends, etTime, toolbar, tvStatus);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

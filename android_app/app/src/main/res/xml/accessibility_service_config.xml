@@ -6,4 +6,4 @@
     android:canRetrieveWindowContent="true"
     android:canPerformGestures="true"
     android:description="@string/accessibility_description"
-    android:packageNames="com.ss.android.ugc.aweme" />
+    android:packageNames="my.maya.android" />

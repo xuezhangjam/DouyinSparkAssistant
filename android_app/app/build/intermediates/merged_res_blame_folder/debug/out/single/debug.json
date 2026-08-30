@@ -8,6 +8,10 @@
         "source": "/home/admin/.gradle/daemon/7.5/com.jam.sparkassistant.app-main-31:/mipmap/ic_launcher_round.png"
     },
     {
+        "merged": "com.jam.sparkassistant.app-merged_res-29:/xml_accessibility_service_config.xml.flat",
+        "source": "com.jam.sparkassistant.app-main-31:/xml/accessibility_service_config.xml"
+    },
+    {
         "merged": "com.jam.sparkassistant.app-merged_res-29:/layout_activity_main.xml.flat",
         "source": "com.jam.sparkassistant.app-main-31:/layout/activity_main.xml"
     },

@@ -2904,6 +2904,7 @@ id bounce
 id bounceBoth
 id bounceEnd
 id bounceStart
+id btnAbout
 id btnPermission
 id btnStart
 id btnStop

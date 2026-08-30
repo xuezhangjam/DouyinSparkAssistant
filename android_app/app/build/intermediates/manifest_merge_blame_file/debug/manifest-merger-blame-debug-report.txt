@@ -12,9 +12,9 @@
 10
 11    <queries>
 11-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:5:5-7:15
-12        <package android:name="com.ss.android.ugc.aweme" />
-12-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:6:9-60
-12-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:6:18-57
+12        <package android:name="my.maya.android" />
+12-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:6:9-51
+12-->/home/admin/douyin_playwright/android_app/app/src/main/AndroidManifest.xml:6:18-48
 13    </queries>
 14
 15    <permission

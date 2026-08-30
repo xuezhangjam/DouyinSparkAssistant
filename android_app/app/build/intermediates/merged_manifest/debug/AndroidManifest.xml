@@ -9,7 +9,7 @@
         android:targetSdkVersion="33" />
 
     <queries>
-        <package android:name="com.ss.android.ugc.aweme" />
+        <package android:name="my.maya.android" />
     </queries>
 
     <permission
