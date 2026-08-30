@@ -1,0 +1,3 @@
+
+rootProject.name = "SparkAssistant"
+include ':app'

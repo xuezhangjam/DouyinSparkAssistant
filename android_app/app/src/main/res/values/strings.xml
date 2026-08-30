@@ -1,0 +1,5 @@
+
+<resources>
+    <string name="app_name">火花助手</string>
+    <string name="accessibility_description">火花助手需要此权限来自动点击抖音消息界面，模拟发送火花。</string>
+</resources>
