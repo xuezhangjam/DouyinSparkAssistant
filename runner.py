@@ -11,6 +11,8 @@ progress_process = None
 
 def init_progress():
     global progress_process
+    if os.environ.get("SPARK_PROGRESS_STDOUT") == "1" or sys.platform == "win32":
+        return
     
     if "DISPLAY" not in os.environ and "WAYLAND_DISPLAY" not in os.environ:
         try:
@@ -64,6 +66,10 @@ total_friends = 0
 
 def update_progress(percent, text):
     global progress_process, sent_count, total_friends
+    if os.environ.get("SPARK_PROGRESS_STDOUT") == "1":
+        print("SPARK_PROGRESS:" + json.dumps({"percent": percent, "text": text,
+              "processed": sent_count, "total": total_friends}, ensure_ascii=False), flush=True)
+        return
     if progress_process:
         if progress_process.poll() is not None:
             # 用户点击了 X 取消
@@ -83,6 +89,8 @@ def update_progress(percent, text):
 
 def close_progress():
     global progress_process
+    if os.environ.get("SPARK_PROGRESS_STDOUT") == "1":
+        return  # The Windows controller reports success only after the worker exits.
     if progress_process and progress_process.poll() is None:
         try:
             progress_process.stdin.write("100\n")

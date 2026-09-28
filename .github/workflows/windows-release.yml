@@ -1,0 +1,42 @@
+name: Publish Windows prerelease
+on:
+  push:
+    branches:
+      - 'release/windows-v1.4.0-win.1'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: windows-prerelease
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          architecture: x64
+      - name: Build and test portable Windows package
+        shell: powershell
+        run: .\build_windows.ps1
+      - name: Publish verified prerelease
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          $tag = 'v1.4.0-win.1'
+          gh release view $tag *> $null
+          if ($LASTEXITCODE -eq 0) {
+            Write-Host "Release already exists; refusing to overwrite published assets."
+            exit 1
+          }
+          $archive = Get-Item 'dist/SparkAssistant-1.4.0-win.1-Windows-x64.zip'
+          $checksum = Get-Item 'dist/SparkAssistant-1.4.0-win.1-Windows-x64.zip.sha256'
+          gh release create $tag $archive.FullName $checksum.FullName WINDOWS.md --target '${{ github.sha }}' --prerelease --title '火花助手 Windows v1.4.0-win.1' --notes-file release-notes-windows.md
+          if ($LASTEXITCODE -ne 0) { throw 'Release publishing failed.' }

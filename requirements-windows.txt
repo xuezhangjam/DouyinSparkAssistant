@@ -1,0 +1,4 @@
+# Tested on Windows x64 with Python 3.13. No GTK, WSL or MSYS2 required.
+PySide6-Essentials==6.11.2
+playwright==1.63.0
+pyinstaller==6.22.3

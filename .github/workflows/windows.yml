@@ -1,0 +1,35 @@
+name: Windows portable build
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '*.py'
+      - '*windows*'
+      - 'SparkAssistant.spec'
+      - 'WINDOWS.md'
+      - 'THIRD_PARTY_NOTICES.md'
+      - 'licenses/**'
+      - 'tests/**'
+      - '.github/workflows/windows.yml'
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          architecture: x64
+      - name: Build and verify
+        shell: powershell
+        run: .\build_windows.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SparkAssistant-Windows-x64
+          path: |
+            dist/*.zip
+            dist/*.sha256
+          if-no-files-found: error
