@@ -9,3 +9,11 @@ __pycache__/
 clients.json
 douyin_playwright.log
 user_data_*/
+.venv-win/
+.windows-browsers/
+dist/
+build/
+test-output/
+*.log
+settings.json
+user_data/

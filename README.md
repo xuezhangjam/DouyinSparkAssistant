@@ -20,6 +20,13 @@
 
 ## 📦 安装教程
 
+### Windows 10 / 11（x64）
+
+Windows 版使用独立的 Qt 桌面界面，支持客户管理、扫码登录、单个/批量执行、测试模式、托盘和每日定时任务。
+完整解压 Windows 便携包后双击 `SparkAssistant.exe`，无需安装 Python 或 GTK。
+源码启动、打包方法、数据迁移与验证范围见 [Windows 使用说明](WINDOWS.md)。
+Windows 构建产物可通过本仓库 Actions 的 **Windows portable build** 工作流生成；尚未自动发布到 Releases。
+
 ### 方式一：一键安装包（推荐）
 
 前往 [Releases](https://github.com/xuezhangjam/DouyinSparkAssistant/releases) 下载最新版安装包，选择对应系统的格式：
